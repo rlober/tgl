@@ -26,7 +26,9 @@ add_library(${lib_name} ${source_files})
 
 target_link_libraries(${lib_name})
 
-
+if(1)
+    add_subdirectory(tests)
+endif()
 
 
 #

@@ -4,6 +4,7 @@
 // STL includes
 #include <iostream>
 #include <vector>
+#include <map>
 
 // Eigen includes
 #include <Eigen/Dense>
@@ -15,7 +16,8 @@
 
 namespace tgl
 {
-
+using StdVectorXd = std::vector<Eigen::VectorXd>;
+using WaypointMap = std::map<double, Eigen::VectorXd>; // Key = time_step, Value = VectorXd Waypoint
 
 class Waypoints {
 public:
