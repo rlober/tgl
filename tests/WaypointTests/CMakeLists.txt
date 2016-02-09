@@ -4,3 +4,4 @@ set(bin_name "TGL_WaypointTest")
 project(${bin_name})
 
 add_executable(${bin_name} main.cpp)
+target_link_libraries(${bin_name} tgl)
