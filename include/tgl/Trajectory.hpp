@@ -11,15 +11,14 @@
 // TGL includes
 #include "tgl/TglTools.hpp"
 #include "tgl/TglTypes.hpp"
+#include "tgl/Waypoints.hpp"
+
 
 
 
 
 namespace tgl
 {
-
-using Waypoints = std::vector<Eigen::VectorXd>;
-using WaypointTimes = std::vector<double>;
 
 class Trajectory {
 public:
@@ -38,7 +37,6 @@ public:
 
 protected:
     Waypoints wpts;
-    WaypointTimes wptimes;
 
 };
 
