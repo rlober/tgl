@@ -9,7 +9,7 @@
 
 
 #ifndef TGL_CHRONO_STOP
-#define TGL_CHRONO_STOP std::cout << "Time elapsed (file: "<< __FILE__ << " lines: "<< TGL_CHRONO_START_LINE << "-"<< __LINE__ << ") "<< std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - TGL_CHRONO_START_TIME).count() << "ms" << std::endl; TGL_CHRONO_COUNT++;
+#define TGL_CHRONO_STOP std::cout << "|------------|\n| tgl_chrono |\n|------------|\n" << "file: "<< __FILE__ << "\nlines: "<< TGL_CHRONO_START_LINE << "-"<< __LINE__ << "\ntime_elapsed: "<< std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - TGL_CHRONO_START_TIME).count() << " ms\n\n"; TGL_CHRONO_COUNT++;
 #endif
 
 namespace tgl
