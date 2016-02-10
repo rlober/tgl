@@ -14,7 +14,7 @@ static int TEST_SUCCESS_COUNT=0; // Number of successful tests
 class TglTest{
 public:
     TglTest(){TEST_COUNT++; testNumber=TEST_COUNT;}
-    ~TglTest()
+    virtual ~TglTest()
     {
         if (testNumber==1) {
             if (TEST_COUNT == TEST_SUCCESS_COUNT) {
@@ -26,7 +26,7 @@ public:
         }
     }
     void runTest(){
-        TglTestMessage tglMsg = doRunTest();
+        TglTestMessage tglMsg = test();
         TEST_SUCCESS_COUNT += tglMsg;
         if (tglMsg) {
             std::cout << "Test ["<< typeid(*this).name() << "] SUCCEEDED." << std::endl;
@@ -35,7 +35,7 @@ public:
         }
     }
 protected:
-    virtual TglTestMessage doRunTest() = 0;
+    virtual TglTestMessage test() = 0;
     int testNumber;
 };
 

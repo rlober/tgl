@@ -9,9 +9,9 @@ using namespace tgl;
 *
 * Example test pattern:
 
-class BlahTest : public TglTest{
+class MyTest : public TglTest{
 protected:
-    TglTestMessage doRunTest(){
+    TglTestMessage test(){
         Waypoints wpt;
         // do stuff with wpt
         if // good result
@@ -25,8 +25,13 @@ protected:
 
 class ConstructorTest : public TglTest{
 protected:
-    TglTestMessage doRunTest(){
-        Waypoints wpt;
+    TglTestMessage test(){
+        int nDof = 3; Eigen::VectorXd onesVec = Eigen::VectorXd::Ones(nDof);
+        StdVectorXd wpt_vector = {onesVec*1.0, onesVec*2.0, onesVec*3.0};
+        StdDoubleVector wpt_times = {0.0, 1.1, 2.1};
+        Waypoints wpt1;
+        Waypoints wpt2(wpt_vector);
+        Waypoints wpt3(wpt_vector, wpt_times);
         return TGL_TEST_SUCCESS;
     }
 };
