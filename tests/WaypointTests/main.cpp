@@ -3,31 +3,50 @@
 
 using namespace tgl;
 
-class ConstructorTest : public WaypointTest{
+/*************************************************
+*
+*   Test definitions
+*
+* Example test pattern:
+
+class BlahTest : public TglTest{
 protected:
-    TglTestMessage doRunTest(const Waypoints& wpt){
-        std::cout << "Test 1" << std::endl;
+    TglTestMessage doRunTest(){
+        Waypoints wpt;
+        // do stuff with wpt
+        if // good result
+            return TGL_TEST_SUCCESS;
+        else // bad result
+            return TGL_TEST_FAILURE;
+    }
+};
+
+*************************************************/
+
+class ConstructorTest : public TglTest{
+protected:
+    TglTestMessage doRunTest(){
+        Waypoints wpt;
         return TGL_TEST_SUCCESS;
     }
 };
 
+/*************************************************
+*
+*   main
+*
+*************************************************/
 
-
-int main(int argc, char const *argv[]) {
-
-    Waypoints wpt;
+int main(int argc, char const *argv[])
+{
+    std::vector<TglTest*> testVector;
+    /*****************************************/
     /*
-    *   Test Case 1
+    *   Make sure to add your test to the list
+    *   e.g. testVector.push_back(new BlahTest);
     */
-    WaypointTest* test1 = new ConstructorTest;
-    test1->runTest(wpt);
+    testVector.push_back(new ConstructorTest);
 
-
-    if (TEST_COUNT == TEST_SUCCESS_COUNT) {
-        std::cout << "All Waypoint class tests ("<< TEST_SUCCESS_COUNT <<"/"<< TEST_COUNT <<") passed!" << std::endl;
-    }
-    else {
-        std::cout << TEST_SUCCESS_COUNT <<"/"<< TEST_COUNT << " Waypoint class tests failed:" << std::endl;
-    }
-    return TEST_COUNT == TEST_SUCCESS_COUNT;
+    /*****************************************/
+    return runAllTests(testVector);
 }

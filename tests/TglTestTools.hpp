@@ -11,19 +11,44 @@ enum TglTestMessage {
 static int TEST_COUNT=0; // increment for each new test case
 static int TEST_SUCCESS_COUNT=0; // Number of successful tests
 
-class WaypointTest{
+class TglTest{
 public:
-    WaypointTest(){TEST_COUNT++;}
-
-    void runTest(const Waypoints& wptObject){
-        TEST_SUCCESS_COUNT += doRunTest(wptObject);
+    TglTest(){TEST_COUNT++; testNumber=TEST_COUNT;}
+    ~TglTest()
+    {
+        if (testNumber==1) {
+            if (TEST_COUNT == TEST_SUCCESS_COUNT) {
+                std::cout << "All tests ("<< TEST_SUCCESS_COUNT <<"/"<< TEST_COUNT <<") passed!" << std::endl;
+            }
+            else {
+                std::cout << TEST_SUCCESS_COUNT <<"/"<< TEST_COUNT << " tests failed:" << std::endl;
+            }
+        }
     }
-
+    void runTest(){
+        TglTestMessage tglMsg = doRunTest();
+        TEST_SUCCESS_COUNT += tglMsg;
+        if (tglMsg) {
+            std::cout << "Test ["<< typeid(*this).name() << "] SUCCEEDED." << std::endl;
+        }else{
+            std::cout << "Test ["<< typeid(*this).name() << "] FAILED." << std::endl;
+        }
+    }
 protected:
-
-    virtual TglTestMessage doRunTest(const Waypoints& wptObject) = 0;
+    virtual TglTestMessage doRunTest() = 0;
+    int testNumber;
 };
 
+bool runAllTests(std::vector<TglTest*> testVector)
+{
+    for(auto test:testVector)
+        test->runTest();
+
+    for(auto test:testVector)
+        delete test;
+
+    return TEST_COUNT == TEST_SUCCESS_COUNT;
+}
 
 
 
