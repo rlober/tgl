@@ -15,13 +15,14 @@
 // TGL includes
 #include "tgl/TglTools.hpp"
 #include "tgl/TglTypes.hpp"
+#include "tgl/Waypoint.hpp"
 
 
 namespace tgl
 {
 using StdVectorXd = std::vector<Eigen::VectorXd>;
 using StdDoubleVector = std::vector<double>;
-using WaypointMap = std::map<double, Eigen::VectorXd>; // Key = time_step, Value = VectorXd Waypoint
+using WaypointMap = std::map<int, Waypoint>; // Key = index, Value = VectorXd Waypoint
 
 class WaypointSet {
 public:
