@@ -1,2 +1,3 @@
-add_subdirectory(WaypointSetTests)
 add_subdirectory(TglToolsTests)
+add_subdirectory(WaypointTests)
+add_subdirectory(WaypointSetTests)
