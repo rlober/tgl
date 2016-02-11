@@ -1,5 +1,5 @@
-#ifndef TGL_WAYPOINTS_H
-#define TGL_WAYPOINTS_H
+#ifndef TGL_WAYPOINTSET_H
+#define TGL_WAYPOINTSET_H
 
 // STL includes
 #include <iostream>
@@ -23,17 +23,17 @@ using StdVectorXd = std::vector<Eigen::VectorXd>;
 using StdDoubleVector = std::vector<double>;
 using WaypointMap = std::map<double, Eigen::VectorXd>; // Key = time_step, Value = VectorXd Waypoint
 
-class Waypoints {
+class WaypointSet {
 public:
     // Constructor functions
-    Waypoints();
-    Waypoints(const StdVectorXd& wpts);
-    Waypoints(const StdVectorXd& wpts, const StdDoubleVector& wpt_times);
+    WaypointSet();
+    WaypointSet(const StdVectorXd& wpts);
+    WaypointSet(const StdVectorXd& wpts, const StdDoubleVector& wpt_times);
 
     //Destructor
-    ~Waypoints();
+    ~WaypointSet();
 
-    //Set Waypoints
+    //Set WaypointSet
     TglMessage setWaypoints(const StdVectorXd& wpts);
     TglMessage setWaypoints(const StdVectorXd& wpts, const StdDoubleVector& wpt_times);
 
@@ -62,4 +62,4 @@ private:
 };
 
 } // end of namespace tgl
-#endif // TGL_WAYPOINTS_H
+#endif // TGL_WAYPOINTSET_H

@@ -11,7 +11,7 @@
 // TGL includes
 #include "tgl/TglTools.hpp"
 #include "tgl/TglTypes.hpp"
-#include "tgl/Waypoints.hpp"
+#include "tgl/WaypointSet.hpp"
 
 
 
@@ -36,7 +36,7 @@ public:
     virtual TglMessage getDesired(const double time_step, const Eigen::MatrixXd& current, Eigen::MatrixXd& desired) = 0;
 
 protected:
-    Waypoints wpts;
+    WaypointSet wptSet;
 
 };
 

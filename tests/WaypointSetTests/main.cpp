@@ -1,5 +1,5 @@
 #include "../TglTestTools.hpp"
-#include "tgl/Waypoints.hpp"
+#include "tgl/WaypointSet.hpp"
 
 using namespace tgl;
 
@@ -12,8 +12,8 @@ using namespace tgl;
 class MyTest : public TglTest{
 protected:
     TglTestMessage test(){
-        Waypoints wpt;
-        // do stuff with wpt
+        WaypointSet wpts;
+        // do stuff with wpts
         if // good result
             return TGL_TEST_SUCCESS;
         else // bad result
@@ -29,9 +29,9 @@ protected:
         int nDof = 3; Eigen::VectorXd onesVec = Eigen::VectorXd::Ones(nDof);
         StdVectorXd wpt_vector = {onesVec*1.0, onesVec*2.0, onesVec*3.0};
         StdDoubleVector wpt_times = {0.0, 1.1, 2.1};
-        Waypoints wpt1;
-        Waypoints wpt2(wpt_vector);
-        Waypoints wpt3(wpt_vector, wpt_times);
+        WaypointSet wpt1;
+        WaypointSet wpt2(wpt_vector);
+        WaypointSet wpt3(wpt_vector, wpt_times);
         return TGL_TEST_SUCCESS;
     }
 };

@@ -1,7 +1,9 @@
 #ifndef TGL_TGLTESTTOOLS_HPP
 #define TGL_TGLTESTTOOLS_HPP
 
-#include "tgl/Waypoints.hpp"
+#include <iostream>
+#include <vector>
+#include <typeinfo>
 
 namespace tgl{
 enum TglTestMessage {
