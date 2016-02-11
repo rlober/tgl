@@ -5,12 +5,12 @@ namespace tgl
 {
 
 enum TglMessage {
-    TGL_ERROR =         -1,     // can use this for conditional statement
-    TGL_WARNING,        // 0
+    TGL_ERROR,          // 0 can use this for conditional statement
     TGL_OK,             // 1
-    TGL_START,          // 2
-    TGL_RUNNING,        // 3
-    TGL_FINISHED        // 4
+    TGL_WARNING,        // 2
+    TGL_START,          // 3
+    TGL_RUNNING,        // 4
+    TGL_FINISHED        // 5
 };
 
 } // End of namespace tgl
