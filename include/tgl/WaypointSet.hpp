@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <cassert>
 
 // Eigen includes
 #include <Eigen/Dense>
@@ -22,7 +23,9 @@ namespace tgl
 {
 using StdVectorXd = std::vector<Eigen::VectorXd>;
 using StdDoubleVector = std::vector<double>;
+using StdWaypointVector = std::vector<Waypoint>;
 using WaypointMap = std::map<int, Waypoint>; // Key = index, Value = VectorXd Waypoint
+using WaypointPair = std::pair<int, Waypoint>;
 
 class WaypointSet {
 public:
@@ -55,8 +58,7 @@ public:
     Eigen::VectorXd getWaypointAtTime(const double time_step);
 
 private:
-    TglMessage setWaypointMap(const StdVectorXd& wpts, const StdDoubleVector& wpt_times);
-
+    TglMessage setWaypointMap(const StdWaypointVector& wptVec);
 
     WaypointMap wptMap;
 
