@@ -148,7 +148,7 @@ TglMessage Waypoint::setTime(double newWptTime)
 
 Eigen::VectorXd Waypoint::get()
 {
-    return wpt.eval();
+    return wpt;
 }
 double Waypoint::getTime()
 {
