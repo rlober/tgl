@@ -57,10 +57,37 @@ protected:
         int nDof = 3; Eigen::VectorXd onesVec = Eigen::VectorXd::Ones(nDof);
         StdVectorXd wpt_vector = {onesVec*1.0, onesVec*2.0, onesVec*3.0};
         StdDoubleVector wpt_times = {0.0, 1.1, 2.1};
+
+        Eigen::MatrixXd testMat(nDof,3); testMat << onesVec*1.0, onesVec*2.0, onesVec*3.0;
+        Eigen::MatrixXd emptyMat(0,0);
+
         WaypointSet wpt1;
         WaypointSet wpt2(wpt_vector);
         WaypointSet wpt3(wpt_vector, wpt_times);
-        return TGL_TEST_SUCCESS;
+
+        bool matsOk = true;
+        matsOk &= emptyMat == wpt1.asMatrix();
+        if(!matsOk){LOG(ERROR) << "Unitialized waypoint asMatrix() method did not work.";}
+        for(int i=0; i<3; ++i){
+            matsOk &= testMat.col(i) == wpt2.asMatrix().col(i);
+            if(!matsOk){LOG(ERROR) << "Initialized waypoint asMatrix() method did not work.";}
+            matsOk &= testMat.col(i) == wpt3.asMatrix().col(i);
+            if(!matsOk){LOG(ERROR) << "Initialized waypoint and time asMatrix() method did not work.";}
+        }
+        TGL_CHRONO_START
+        std::cout << "wpt3.asMatrix(false, false)\n" << wpt3.asMatrix(false, false) << std::endl;
+        TGL_CHRONO_STOP_US
+        TGL_CHRONO_START
+        std::cout << "wpt3.asMatrix(false, true)\n" << wpt3.asMatrix(false, true) << std::endl;
+        TGL_CHRONO_STOP_US
+        TGL_CHRONO_START
+        std::cout << "wpt3.asMatrix(true, false)\n" << wpt3.asMatrix(true, false) << std::endl;
+        TGL_CHRONO_STOP_US
+        TGL_CHRONO_START
+        std::cout << "wpt3.asMatrix(true, true)\n" << wpt3.asMatrix(true, true) << std::endl;
+        TGL_CHRONO_STOP_US
+
+        return matsOk ? TGL_TEST_SUCCESS : TGL_TEST_FAILURE;
     }
 };
 
