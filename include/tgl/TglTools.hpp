@@ -40,6 +40,15 @@
 #define TGL_CHRONO_STOP TGL_CHRONO_STOP_TIME = std::chrono::high_resolution_clock::now(); std::cout << "|------------|\n| tgl_chrono |\n|------------|\n" << "file: "<< __FILE__ << "\nlines: "<< TGL_CHRONO_START_LINE << "-"<< __LINE__ << "\ntime_elapsed: "<< std::chrono::duration_cast<std::chrono::milliseconds>(TGL_CHRONO_STOP_TIME - TGL_CHRONO_START_TIME).count() << " ms\n\n"; TGL_CHRONO_COUNT++;
 #endif
 
+
+#ifndef TGL_CHRONO_STOP_US
+#define TGL_CHRONO_STOP_US TGL_CHRONO_STOP_TIME = std::chrono::high_resolution_clock::now(); std::cout << "|------------|\n| tgl_chrono |\n|------------|\n" << "file: "<< __FILE__ << "\nlines: "<< TGL_CHRONO_START_LINE << "-"<< __LINE__ << "\ntime_elapsed: "<< std::chrono::duration_cast<std::chrono::microseconds>(TGL_CHRONO_STOP_TIME - TGL_CHRONO_START_TIME).count() << " us\n\n"; TGL_CHRONO_COUNT++;
+#endif
+
+#ifndef TGL_CHRONO_STOP_NS
+#define TGL_CHRONO_STOP_NS TGL_CHRONO_STOP_TIME = std::chrono::high_resolution_clock::now(); std::cout << "|------------|\n| tgl_chrono |\n|------------|\n" << "file: "<< __FILE__ << "\nlines: "<< TGL_CHRONO_START_LINE << "-"<< __LINE__ << "\ntime_elapsed: "<< std::chrono::duration_cast<std::chrono::nanoseconds>(TGL_CHRONO_STOP_TIME - TGL_CHRONO_START_TIME).count() << " ns\n\n"; TGL_CHRONO_COUNT++;
+#endif
+
 namespace tgl
 {
 
