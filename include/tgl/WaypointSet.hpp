@@ -53,6 +53,7 @@ using StdVectorXd = std::vector<Eigen::VectorXd>;
 using StdDoubleVector = std::vector<double>;
 using StdWaypointVector = std::vector<Waypoint>;
 using WaypointMap = std::map<int, Waypoint>; // Key = index, Value = VectorXd Waypoint
+using wptMapIterator = std::map<int, Waypoint>::iterator; // Key = index, Value = VectorXd Waypoint
 using WaypointPair = std::pair<int, Waypoint>;
 
 class WaypointSet {
@@ -61,6 +62,7 @@ public:
     WaypointSet();
     WaypointSet(const StdVectorXd& wpts);
     WaypointSet(const StdVectorXd& wpts, const StdDoubleVector& wpt_times);
+    WaypointSet(const StdWaypointVector& wptVec);
 
     //Destructor
     ~WaypointSet();
@@ -68,6 +70,7 @@ public:
     //Set WaypointSet
     TglMessage setWaypoints(const StdVectorXd& wpts);
     TglMessage setWaypoints(const StdVectorXd& wpts, const StdDoubleVector& wpt_times);
+    TglMessage setWaypoints(const StdWaypointVector& wptVec);
 
     //Add waypoints
     TglMessage addWaypoint(const Eigen::VectorXd& wpt);
@@ -76,7 +79,7 @@ public:
     TglMessage addWaypoints(const StdVectorXd& wpts, const StdDoubleVector& wpt_times);
 
     //Eigen convertors
-    Eigen::MatrixXd asMatrix();
+    Eigen::MatrixXd asMatrix(bool includeTimes = false, bool useRowFormat = false);
 
     //Getters
     Eigen::VectorXd getWaypointTimes();
@@ -87,9 +90,11 @@ public:
 
 private:
     TglMessage setWaypointMap(const StdWaypointVector& wptVec);
+    TglMessage fillFastWaypointVectors();
+
 
     WaypointMap wptMap;
-
+    StdDoubleVector fastWptVector, fastWptVectorWithTimes;
 };
 
 } // end of namespace tgl
