@@ -32,6 +32,10 @@
 namespace tgl
 {
 
+/*! \brief An enum for providing useful return values from function executions.
+ *
+ *  ERROR, OK, and WARNING are mostly for functions which would return booleans for success or failure. START, RUNNING, and FINISHED are used for getting the status of the current trajectory's execution.
+ */
 enum TglMessage {
     TGL_ERROR,          // 0 can use this for conditional statement
     TGL_OK,             // 1
