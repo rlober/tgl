@@ -69,18 +69,18 @@ public:
     WaypointSet();
 
     /*! Initializing constructor. Creates a fully defined WaypointMap from a vector of waypoint coordinates. Initializes the waypoint times to 0.0 for each waypoint.
-     *  @param wpts a StdVectorXd of waypoint coordinates
+     *  \param wpts a StdVectorXd of waypoint coordinates
      */
     WaypointSet(const StdVectorXd& wpts);
 
     /*! Initializing constructor. Creates a fully defined WaypointMap from a vector of waypoint coordinates and times.
-     *  @param wpts a StdVectorXd of waypoint coordinates
-     *  @param wpt_times a StdDoubleVector of times for each of the waypoint coordinate vectors
+     *  \param wpts a StdVectorXd of waypoint coordinates
+     *  \param wpt_times a StdDoubleVector of times for each of the waypoint coordinate vectors
      */
     WaypointSet(const StdVectorXd& wpts, const StdDoubleVector& wpt_times);
 
     /*! Initializing constructor. Creates a fully defined WaypointMap from a vector of Waypoints.
-     *  @param wptVec a StdWaypointVector of waypoints.
+     *  \param wptVec a StdWaypointVector of waypoints.
      */
     WaypointSet(const StdWaypointVector& wptVec);
 
@@ -89,40 +89,40 @@ public:
     ~WaypointSet();
 
     /*! Sets the waypoints in the WaypointSet. Note: this is a clearing method and will erase any existing waypoints.
-     *  @param wpts a StdVectorXd of waypoint coordinates
+     *  \param wpts a StdVectorXd of waypoint coordinates
      */
     TglMessage setWaypoints(const StdVectorXd& wpts);
 
     /*! Sets the waypoints in the WaypointSet. Note: this is a clearing method and will erase any existing waypoints.
-     *  @param wpts a StdVectorXd of waypoint coordinates
-     *  @param wpt_times a StdDoubleVector of times for each of the waypoint coordinate vectors
+     *  \param wpts a StdVectorXd of waypoint coordinates
+     *  \param wpt_times a StdDoubleVector of times for each of the waypoint coordinate vectors
      */
     TglMessage setWaypoints(const StdVectorXd& wpts, const StdDoubleVector& wpt_times);
 
     /*! Sets the waypoints in the WaypointSet. Note: this is a clearing method and will erase any existing waypoints.
-    *  @param wptVec a StdWaypointVector of waypoints
+     *  \param wptVec a StdWaypointVector of waypoints
      */
     TglMessage setWaypoints(const StdWaypointVector& wptVec);
 
     /*! Adds a single waypoint to the WaypointSet. The waypoint will be added to the end of the movement.
-     *  @param wpt an Eigen::VectorXd representing the new waypoint coordinates
+     *  \param wpt an Eigen::VectorXd representing the new waypoint coordinates
      */
     TglMessage addWaypoint(const Eigen::VectorXd& wpt);
 
     /*! Adds a single waypoint to the WaypointSet. The waypoint will be added at the time specified.
-     *  @param wpt an Eigen::VectorXd representing the new waypoint coordinates
-     *  @param wpt_time the time at which the waypoint should occur
+     *  \param wpt an Eigen::VectorXd representing the new waypoint coordinates
+     *  \param wpt_time the time at which the waypoint should occur
      */
     TglMessage addWaypoint(const Eigen::VectorXd& wpt, const double wpt_time);
 
     /*! Adds a set of waypoints to the WaypointSet. The waypoints will be added to the end of the movement
-     *  @param wpts a StdVectorXd of waypoint coordinates
+     *  \param wpts a StdVectorXd of waypoint coordinates
      */
     TglMessage addWaypoints(const StdVectorXd& wpts);
 
     /*! Adds a set of waypoints to the WaypointSet. The waypoints will be added at the times specified.
-     *  @param wpts a StdVectorXd of waypoint coordinates
-     *  @param wpt_times a StdDoubleVector of times for each of the waypoint coordinate vectors
+     *  \param wpts a StdVectorXd of waypoint coordinates
+     *  \param wpt_times a StdDoubleVector of times for each of the waypoint coordinate vectors
      */
     TglMessage addWaypoints(const StdVectorXd& wpts, const StdDoubleVector& wpt_times);
 
@@ -134,7 +134,7 @@ public:
             z_0 & z_1 & \dots & z_n
             \end{bmatrix}
         \f]
-     *  @param includeTimes put the waypoint times at the top of each waypoint column vector i.e.
+     *  \param includeTimes put the waypoint times at the top of each waypoint column vector i.e.
          \f[
             \begin{bmatrix}
              t_0 & t_1 & \dots & t_n \\
@@ -143,7 +143,7 @@ public:
              z_0 & z_1 & \dots & z_n
              \end{bmatrix}
          \f]
-     *  @param useRowFormat return the matrix in row order format i.e.
+     *  \param useRowFormat return the matrix in row order format i.e.
         \f[
             \begin{bmatrix}
             x_0 & y_0 & z_0 \\
@@ -156,34 +156,34 @@ public:
     Eigen::MatrixXd asMatrix(bool includeTimes = false, bool useRowFormat = false);
 
     /*! Get the waypoint times as a vector.
-     *  @return An Eigen::VectorXd containing the waypoint times
+     *  \return An Eigen::VectorXd containing the waypoint times
      */
     Eigen::VectorXd getWaypointTimes();
 
     /*! Get the last waypoint time (equal to the total expected duration of the trajectory).
-     *  @return The last waypoint vector time
+     *  \return The last waypoint vector time
      */
     double getLastWaypointTime();
 
     /*! Get the waypoint dimension. This is the number of DoF of the trajectory.
-     *  @return The number of DoF of the trajectory
+     *  \return The number of DoF of the trajectory
      */
     int getWaypointDimension();
 
     /*! Get the total number of waypoints.
-     *  @return The number of waypoints in the set.
+     *  \return The number of waypoints in the set.
      */
     int getNumberOfWaypoints();
 
     /*! Get the waypoint at a specific time.
-     *  @return An Eigen::VectorXd containing the waypoint coordinates
+     *  \return An Eigen::VectorXd containing the waypoint coordinates
      */
     Eigen::VectorXd getWaypointAtTime(const double time_step);
 
 private:
 
     /*! Sets the waypoints in the WaypointMap. Note: this is a clearing method and will erase any existing waypoints.
-     *  @param wptVec a StdWaypointVector of waypoints
+     *  \param wptVec a StdWaypointVector of waypoints
      */
     TglMessage setWaypointMap(const StdWaypointVector& wptVec);
 
