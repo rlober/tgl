@@ -48,39 +48,111 @@
 
 namespace tgl
 {
+
+/*! \class Waypoint
+ *  \brief A class for defining waypoints generically and in any space.
+ *
+ *  This class basically just provides a nice way of coupling a waypoint coordinate vector and its corresponding time step
+ */
 class Waypoint {
 public:
-    // Constructor functions
+
+    /*! Basic constructor. Does nothing.
+     */
     Waypoint();
+
+    /*! Initializing constructor. Creates a waypoint from a vector of waypoint coordinates. Initializes the waypoint time to 0.0.
+     *  \param newWpt a vector of waypoint coordinates
+     */
     Waypoint(const Eigen::VectorXd& newWpt);
+
+    /*! Initializing constructor. Creates a waypoint from a vector of waypoint coordinates and their associated time.
+     *  \param newWpt a vector of waypoint coordinates
+     *  \param newWptTime the time at which the waypoint should occur
+     */
     Waypoint(const Eigen::VectorXd& newWpt, double newWptTime);
 
-    // Copy and Assignment
+    /*! Assignment operator.
+     */
     Waypoint& operator=(Waypoint other);
 
-    // Operator overloads
+    /*! Equivalence operator. Operates only on the internal waypoint coordinates (e.g. Eigen::VectorXd);
+     */
     bool operator==(Waypoint& other);
+
+    /*! Addition operator. Operates only on the internal waypoint coordinates (e.g. Eigen::VectorXd);
+     */
     Waypoint operator+(Waypoint& other);
+
+    /*! Subtraction operator. Operates only on the internal waypoint coordinates (e.g. Eigen::VectorXd);
+     */
     Waypoint operator-(Waypoint& other);
+
+    /*! Multiplication operator. Operates only on the internal waypoint coordinates (e.g. Eigen::VectorXd);
+     */
     Waypoint operator*(double scalar);
+
+    /*! Divison operator. Operates only on the internal waypoint coordinates (e.g. Eigen::VectorXd);
+     */
     Waypoint operator/(double scalar);
+
+    // TODO: Implement all this shit.
     // Waypoint operator+=(Waypoint& other);
     // Waypoint operator-=(Waypoint& other);
     // Waypoint operator*=(double scalar);
     // Waypoint operator/=(double scalar);
 
+    /*! Sets the waypoint from a vector of waypoint coordinates. Initializes the waypoint time to 0.0. Note: This will erase any existing waypoint data.
+     *  \param newWpt a vector of waypoint coordinates
+     */
     TglMessage set(const Eigen::VectorXd& newWpt);
+
+    /*! Sets the waypoint from a vector of waypoint coordinates and their associated time. Note: This will erase any existing waypoint data.
+     *  \param newWpt a vector of waypoint coordinates
+     *  \param newWptTime the time at which the waypoint should occur
+     */
     TglMessage set(const Eigen::VectorXd& newWpt, double newWptTime);
+
+    /*! Sets only the waypoint time. Note: This will erase the existing waypoint time.
+     *  \param newWptTime the time at which the waypoint should occur
+     */
     TglMessage setTime(double newWptTime);
 
-    Eigen::VectorXd get();
+    /*! Gets the waypoint coordinates as an Eigen::VectorXd.
+        \f[
+           \begin{bmatrix}
+            x \\
+            y \\
+            z
+            \end{bmatrix}
+        \f]
+     *  \param includeTimes put the waypoint time at the top of the returned vector waypoint column vector i.e.
+         \f[
+            \begin{bmatrix}
+             t \\
+             x \\
+             y \\
+             z
+             \end{bmatrix}
+         \f]
+     *  \return A vector of waypoint coordinates.
+     */
+    Eigen::VectorXd get(bool includeTimes = false);
+
+    /*! Get the waypoint time.
+     *  \return The waypoint time.
+     */
     double getTime();
+
+    /*! Get the dimension of the waypoint coordinates. This is the DoF.
+     *  \return The waypoint dimension.
+     */
     int getDimension();
 
 
 private:
-    Eigen::VectorXd wpt;
-    double wptTime;
+    Eigen::VectorXd wpt;    /*!< The waypoint coordinate vector. */
+    double wptTime;         /*!< The waypoint time. */
 };
 
 } // end of namespace tgl

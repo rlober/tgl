@@ -146,9 +146,15 @@ TglMessage Waypoint::setTime(double newWptTime)
     return TGL_OK;
 }
 
-Eigen::VectorXd Waypoint::get()
+Eigen::VectorXd Waypoint::get(bool includeTimes)
 {
-    return wpt;
+    if (includeTimes) {
+        Eigen::VectorXd v(getDimension() + 1); v << getTime(), wpt;
+        return v;
+    }
+    else {
+        return wpt;
+    }
 }
 double Waypoint::getTime()
 {
