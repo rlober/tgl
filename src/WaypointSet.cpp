@@ -1,4 +1,4 @@
-/*! \file       WaypointSet.hpp
+/*! \file       WaypointSet.cpp
  *  \brief      A class for defining a set of waypoints and manipulating them properly.
  *  \details
  *  \author     Ryan Lober
