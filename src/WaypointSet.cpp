@@ -31,6 +31,10 @@
 
 using namespace tgl;
 
+/****************************************************
+                   Public Functions
+ ****************************************************/
+
 WaypointSet::WaypointSet()
 {
 }
@@ -100,20 +104,24 @@ TglMessage WaypointSet::setWaypoints(const StdWaypointVector& wptVec)
     return setWaypointMap(wptVec);
 }
 
-TglMessage WaypointSet::setWaypointMap(const StdWaypointVector& wptVec)
+TglMessage WaypointSet::addWaypoint(const Eigen::VectorXd& wpt)
 {
-    int wptID = 0;
-    bool insertOk=true;
-    for(auto wpt : wptVec){
-        insertOk &= wptMap.insert(WaypointPair(wptID, wpt)).second;
-        wptID++;
-    }
-    if (insertOk) {
-        fillFastWaypointVectors();
-    }
+    //TODO: implement
+}
 
+TglMessage WaypointSet::addWaypoint(const Eigen::VectorXd& wpt, const double wpt_time)
+{
+    //TODO: implement
+}
 
-    return insertOk ? TGL_OK : TGL_ERROR;
+TglMessage WaypointSet::addWaypoints(const StdVectorXd& wpts)
+{
+    //TODO: implement
+}
+
+TglMessage WaypointSet::addWaypoints(const StdVectorXd& wpts, const StdDoubleVector& wpt_times)
+{
+    //TODO: implement
 }
 
 Eigen::MatrixXd WaypointSet::asMatrix(bool includeTimes, bool useRowFormat)
@@ -139,25 +147,9 @@ Eigen::MatrixXd WaypointSet::asMatrix(bool includeTimes, bool useRowFormat)
     }
 }
 
-TglMessage WaypointSet::fillFastWaypointVectors()
+Eigen::VectorXd WaypointSet::getWaypointTimes()
 {
-    if(!wptMap.empty())
-    {
-        fastWptVector.clear();
-        fastWptVectorWithTimes.clear();
-        for(wptMapIterator it = wptMap.begin(); it != wptMap.end(); ++it)
-        {
-            fastWptVectorWithTimes.push_back(it->second.getTime());
-            for(auto dof = 0; dof < it->second.get().size(); ++dof){
-                fastWptVector.push_back( it->second.get()(dof) );
-                fastWptVectorWithTimes.push_back( it->second.get()(dof) );
-            }
-        }
-        return TGL_OK;
-    }else{
-        LOG(WARNING) << "Waypoint set is empty.";
-        return TGL_ERROR;
-    }
+    return Eigen::Map<Eigen::VectorXd>(fastWptTimesVector.data(), getNumberOfWaypoints());
 }
 
 int WaypointSet::getNumberOfWaypoints()
@@ -172,4 +164,64 @@ int WaypointSet::getWaypointDimension()
 
     else
         return 0;
+}
+
+Eigen::VectorXd WaypointSet::getWaypointAtTime(const double time_step)
+{
+    if(!wptMap.empty()){
+        // Iterate through the map and compare the wpt times to the desired time.
+        for(auto&& wpt : wptMap){
+            if (time_step == wpt.second.getTime()) {
+                return wpt.second.get();
+            }
+        }
+        // If none of the times match return a vector of zeros.
+        return Eigen::VectorXd::Zero(getWaypointDimension());
+    }else{
+        //If the map is empty then throw a warning and return a vector of zeros.
+        LOG(ERROR) << "The WaypointSet is empty.";
+        return Eigen::VectorXd::Zero(getWaypointDimension());
+    }
+}
+
+/****************************************************
+                   Private Functions
+ ****************************************************/
+
+TglMessage WaypointSet::setWaypointMap(const StdWaypointVector& wptVec)
+{
+    int wptID = 0;
+    bool insertOk=true;
+    for(auto wpt : wptVec){
+        insertOk &= wptMap.insert(WaypointPair(wptID, wpt)).second;
+        wptID++;
+    }
+    if (insertOk) {
+        fillFastWaypointVectors();
+    }
+
+
+    return insertOk ? TGL_OK : TGL_ERROR;
+}
+
+TglMessage WaypointSet::fillFastWaypointVectors()
+{
+    if(!wptMap.empty())
+    {
+        fastWptVector.clear();
+        fastWptVectorWithTimes.clear();
+        for(wptMapIterator it = wptMap.begin(); it != wptMap.end(); ++it)
+        {
+            fastWptTimesVector.push_back(it->second.getTime());
+            fastWptVectorWithTimes.push_back(it->second.getTime());
+            for(auto dof = 0; dof < it->second.get().size(); ++dof){
+                fastWptVector.push_back( it->second.get()(dof) );
+                fastWptVectorWithTimes.push_back( it->second.get()(dof) );
+            }
+        }
+        return TGL_OK;
+    }else{
+        LOG(WARNING) << "Waypoint set is empty.";
+        return TGL_ERROR;
+    }
 }
