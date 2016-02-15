@@ -32,6 +32,7 @@
 // STL includes
 #include <iostream>
 #include <vector>
+#include <chrono>
 
 // Eigen includes
 #include <Eigen/Dense>
@@ -63,6 +64,12 @@ public:
      */
     Trajectory();
 
+    /*! Initializing constructor. Sets waypoints.
+     *  \param newWptSet the Waypoint Set to use for the trajectory.
+     */
+    Trajectory(const WaypointSet& newWptSet);
+
+
     /*! Basic destructor. Does nothing.
      */
     virtual ~Trajectory();
@@ -71,14 +78,14 @@ public:
      *  \param desired a reference to an Eigen::MatrixXd which will be filled by the trajectory implementation
      *  \return A TglMessage indicating the status of the trajectory (see TglTypes.hpp)
      */
-    virtual TglMessage getDesired(Eigen::MatrixXd& desired) = 0;
+    TglMessage getDesired(Eigen::MatrixXd& desired);
 
     /*! Get the desired values from the trajectory. **Open Loop**
      *  \param time_step the time with which to calculate the desired values.
      *  \param desired a reference to an Eigen::MatrixXd which will be filled by the trajectory implementation
      *  \return A TglMessage indicating the status of the trajectory (see TglTypes.hpp)
      */
-    virtual TglMessage getDesired(const double time_step, Eigen::MatrixXd& desired) = 0;
+    virtual TglMessage getDesired(const double time_step, Eigen::MatrixXd& desired);
 
     /*! Get the desired values from the trajectory. **Closed Loop**
      *  \param current the current state of the system being controlled by the trajectory.
@@ -96,7 +103,31 @@ public:
     virtual TglMessage getDesired(const double time_step, const Eigen::MatrixXd& current, Eigen::MatrixXd& desired) = 0;
 
 protected:
-    WaypointSet wptSet; /*!< The Waypoint Set for the trajectory. */
+
+    /*! Sets the trajectory waypoints.
+     *  \param newWptSet the Waypoint Set to use for the trajectory.
+     */
+    TglMessage setWaypoints(const WaypointSet& newWptSet);
+
+    /*! Gets the trajectory waypoints.
+     *  \return The Waypoint Set to use for the trajectory.
+     */
+    TglMessage getWaypoints(WaypointSet& newWptSet);
+
+    /*! Resets the internal clock. Simply sets `internalClockResetTrigger` to true.
+     *  \return A TglMessage indicating the success of the operation.
+     */
+    TglMessage resetInternalClock();
+
+    /*! Gets the relative internal time of the trajectory from the first call to `getDesired()`.
+     *  \return The relative time of the trajectory in seconds.
+     */
+    double getInternalClockTime();
+
+private:
+    WaypointSet wptSet;                                                         /*!< The Waypoint Set for the trajectory. */
+    bool internalClockResetTrigger;                                             /*!< Used to determine whether or not to reset the internal clock. */
+    std::chrono::time_point<std::chrono::system_clock> internalClockStartTime;  /*!< The time at which the internal trajectory clock was triggered. */
 
 };
 

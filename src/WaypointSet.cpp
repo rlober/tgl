@@ -184,6 +184,11 @@ Eigen::VectorXd WaypointSet::getWaypointAtTime(const double time_step)
     }
 }
 
+bool WaypointSet::empty()
+{
+    return wptMap.empty();
+}
+
 /****************************************************
                    Private Functions
  ****************************************************/

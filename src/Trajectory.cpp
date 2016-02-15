@@ -31,10 +31,58 @@
 
 using namespace tgl;
 
-Trajectory::Trajectory()
+Trajectory::Trajectory():
+internalClockResetTrigger(true)
 {
+}
+
+Trajectory::Trajectory(const WaypointSet& newWptSet):
+internalClockResetTrigger(true)
+{
+    if(!setWaypoints(newWptSet))
+        LOG(ERROR) << "Could not set the waypoints you passed to the trajectory.";
 }
 
 Trajectory::~Trajectory()
 {
+}
+
+TglMessage Trajectory::getDesired(Eigen::MatrixXd& desired)
+{
+    return getDesired(getInternalClockTime(), desired);
+}
+
+TglMessage Trajectory::getDesired(const double time_step, Eigen::MatrixXd& desired)
+{
+    LOG(ERROR) << "The trajectory you are using has not implemented this function!";
+    return TGL_ERROR;
+}
+
+TglMessage Trajectory::setWaypoints(const WaypointSet& newWptSet)
+{
+    wptSet = newWptSet;
+}
+
+TglMessage Trajectory::getWaypoints(WaypointSet& newWptSet)
+{
+    if (!wptSet.empty()) {
+        newWptSet = wptSet;
+        return TGL_OK;
+    }
+    return TGL_ERROR;
+}
+
+TglMessage Trajectory::resetInternalClock()
+{
+    internalClockResetTrigger = true;
+    return TGL_OK;
+}
+
+double Trajectory::getInternalClockTime()
+{
+    if (internalClockResetTrigger) {
+        internalClockStartTime = std::chrono::system_clock::now();
+    }
+
+    return 0.0;//std::chrono::duration<double>(std::chrono::system_clock::now() - internalClockStartTime);
 }

@@ -180,6 +180,11 @@ public:
      */
     Eigen::VectorXd getWaypointAtTime(const double time_step);
 
+    /*! Check if the Waypoint Set is empty.
+     *  \return An boolean which is true if empty, false otherwise.
+     */
+    bool empty();
+
 private:
 
     /*! Sets the waypoints in the WaypointMap. Note: this is a clearing method and will erase any existing waypoints.
