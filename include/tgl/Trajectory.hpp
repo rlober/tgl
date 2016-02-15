@@ -47,24 +47,56 @@
 
 namespace tgl
 {
-
+/*! \class Trajectory
+ *  \brief An interface class for generic trajectories in any space.
+ *
+ *  This class provides the base interfaces for any type of TGL trajectory. By providing a generic interface, specific implementations can be interchanged effortlessly by simply pointing and object of this base Trjactory class at a particular implementation i.e.
+    ~~~~~~~~~~~~~~{.cpp}
+    tgl::Trajectory* myTraj = new tgl::CustomTrajectory();
+    ~~~~~~~~~~~~~~
+    Then to use the class, the base getter and setters can be called.
+ */
 class Trajectory {
 public:
-    // Constructor function
-    Trajectory();
-    //Destructor
-    ~Trajectory();
 
-    // Open Loop
+    /*! Basic constructor. Does nothing.
+     */
+    Trajectory();
+
+    /*! Basic destructor. Does nothing.
+     */
+    virtual ~Trajectory();
+
+    /*! Get the desired values from the trajectory. This function uses an internal clock to keep track of the time evolution. **Open Loop**
+     *  \param desired a reference to an Eigen::MatrixXd which will be filled by the trajectory implementation
+     *  \return A TglMessage indicating the status of the trajectory (see TglTypes.hpp)
+     */
     virtual TglMessage getDesired(Eigen::MatrixXd& desired) = 0;
+
+    /*! Get the desired values from the trajectory. **Open Loop**
+     *  \param time_step the time with which to calculate the desired values.
+     *  \param desired a reference to an Eigen::MatrixXd which will be filled by the trajectory implementation
+     *  \return A TglMessage indicating the status of the trajectory (see TglTypes.hpp)
+     */
     virtual TglMessage getDesired(const double time_step, Eigen::MatrixXd& desired) = 0;
 
-    // Closed Loop
+    /*! Get the desired values from the trajectory. **Closed Loop**
+     *  \param current the current state of the system being controlled by the trajectory.
+     *  \param desired a reference to an Eigen::MatrixXd which will be filled by the trajectory implementation
+     *  \return A TglMessage indicating the status of the trajectory (see TglTypes.hpp)
+     */
     virtual TglMessage getDesired(const Eigen::MatrixXd& current, Eigen::MatrixXd& desired) = 0;
+
+    /*! Get the desired values from the trajectory. **Closed Loop**
+     *  \param time_step the time with which to calculate the desired values.
+     *  \param current the current state of the system being controlled by the trajectory.
+     *  \param desired a reference to an Eigen::MatrixXd which will be filled by the trajectory implementation
+     *  \return A TglMessage indicating the status of the trajectory (see TglTypes.hpp)
+     */
     virtual TglMessage getDesired(const double time_step, const Eigen::MatrixXd& current, Eigen::MatrixXd& desired) = 0;
 
 protected:
-    WaypointSet wptSet;
+    WaypointSet wptSet; /*!< The Waypoint Set for the trajectory. */
 
 };
 
