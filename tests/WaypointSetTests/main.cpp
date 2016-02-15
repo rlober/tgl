@@ -74,6 +74,38 @@ protected:
             matsOk &= testMat.col(i) == wpt3.asMatrix().col(i);
             if(!matsOk){LOG(ERROR) << "Initialized waypoint and time asMatrix() method did not work.";}
         }
+
+        return matsOk ? TGL_TEST_SUCCESS : TGL_TEST_FAILURE;
+    }
+};
+
+class GetterTest : public TglTest{
+protected:
+    TglTestMessage test(){
+        int nDof = 3; Eigen::VectorXd onesVec = Eigen::VectorXd::Ones(nDof);
+        StdVectorXd wpt_vector = {onesVec*1.0, onesVec*2.0, onesVec*3.0};
+        StdDoubleVector wpt_times = {0.0, 1.1, 2.1};
+        Eigen::Vector3d wpt_times_VecXd(0.0, 1.1, 2.1);
+
+        Eigen::MatrixXd testMat(nDof,3); testMat << onesVec*1.0, onesVec*2.0, onesVec*3.0;
+        Eigen::MatrixXd emptyMat(0,0);
+
+        WaypointSet wpt1;
+        WaypointSet wpt2(wpt_vector);
+        WaypointSet wpt3(wpt_vector, wpt_times);
+
+        bool testsOk = true;
+
+        testsOk &= wpt_times_VecXd == wpt3.getWaypointTimes();
+        if(!testsOk){LOG(ERROR) << "getWaypointTimes() method did not work.";}
+        testsOk &= nDof == wpt3.getWaypointDimension();
+        if(!testsOk){LOG(ERROR) << "getWaypointDimension() method did not work.";}
+        testsOk &= nDof == wpt3.getNumberOfWaypoints();
+        if(!testsOk){LOG(ERROR) << "getNumberOfWaypoints() method did not work.";}
+        testsOk &= onesVec*2.0 == wpt3.getWaypointAtTime(1.1);
+        if(!testsOk){LOG(ERROR) << "getWaypointAtTime() method did not work.";}
+
+        std::cout << "\n-----------------\n\nStart chrono tests...\n\n" << std::endl;
         TGL_CHRONO_START
         std::cout << "wpt3.asMatrix(false, false)\n" << wpt3.asMatrix(false, false) << std::endl;
         TGL_CHRONO_STOP_US
@@ -87,7 +119,9 @@ protected:
         std::cout << "wpt3.asMatrix(true, true)\n" << wpt3.asMatrix(true, true) << std::endl;
         TGL_CHRONO_STOP_US
 
-        return matsOk ? TGL_TEST_SUCCESS : TGL_TEST_FAILURE;
+
+
+        return testsOk ? TGL_TEST_SUCCESS : TGL_TEST_FAILURE;
     }
 };
 
@@ -106,6 +140,7 @@ int main(int argc, char const *argv[])
     *   e.g. testVector.push_back(new BlahTest);
     */
     testVector.push_back(new ConstructorTest);
+    testVector.push_back(new GetterTest);
 
     /*****************************************/
     return runAllTests(testVector);
