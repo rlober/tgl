@@ -35,15 +35,19 @@ Waypoint::Waypoint()
 {
 }
 
-Waypoint::Waypoint(const Eigen::VectorXd& newWpt)
-{
-    set(newWpt);
-}
-
 Waypoint::Waypoint(const Eigen::VectorXd& newWpt, double newWptTime)
 {
-    set(newWpt);
-    setTime(newWptTime);
+    set(newWpt, newWptTime);
+}
+
+Waypoint::Waypoint(const Eigen::Displacementd& newWpt, double newWptTime)
+{
+    set(newWpt, newWptTime);
+}
+
+Waypoint::Waypoint(const Eigen::Rotation3d& newWpt, double newWptTime)
+{
+    set(newWpt, newWptTime);
 }
 
 Waypoint& Waypoint::operator=(Waypoint other)
@@ -119,16 +123,12 @@ Waypoint Waypoint::operator/(double scalar)
 //
 // }
 
-
-
 TglMessage Waypoint::set(const Eigen::VectorXd& newWpt, double newWptTime)
 {
-    set(newWpt);
-    setTime(newWptTime);
-}
+    if (newWptTime!=TGL_WAYPOINT_TIME_NOT_SPECIFIED && newWptTime >= 0.0) {
+        setTime(newWptTime);
+    }
 
-TglMessage Waypoint::set(const Eigen::VectorXd& newWpt)
-{
     if (!getDimension()) {
         wpt = newWpt;
     }else if (getDimension()==newWpt.size()) {
@@ -137,6 +137,24 @@ TglMessage Waypoint::set(const Eigen::VectorXd& newWpt)
         LOG(ERROR) << "The new waypoint dimension ("<< newWpt.size() <<") does not match the current waypoint dimension ("<<getDimension()<<"). Doing nothing.";
         return TGL_ERROR;
     }
+    return TGL_OK;
+}
+
+TglMessage Waypoint::set(const Eigen::Displacementd& newWpt, double newWptTime)
+{
+    //TODO: implement
+    return TGL_OK;
+}
+
+TglMessage Waypoint::set(const Eigen::Rotation3d& newWpt, double newWptTime)
+{
+    //TODO: implement
+    return TGL_OK;
+}
+
+TglMessage Waypoint::set(const Eigen::Wrenchd& newWpt, double newWptTime)
+{
+    //TODO: implement
     return TGL_OK;
 }
 

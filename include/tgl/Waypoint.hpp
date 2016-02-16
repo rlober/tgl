@@ -37,6 +37,7 @@
 
 // Eigen includes
 #include <Eigen/Dense>
+#include <Eigen/Lgsm>
 
 // Glog includes
 #include <glog/logging.h>
@@ -45,6 +46,9 @@
 #include "tgl/TglTools.hpp"
 #include "tgl/TglTypes.hpp"
 
+#ifndef TGL_WAYPOINT_TIME_NOT_SPECIFIED
+#define TGL_WAYPOINT_TIME_NOT_SPECIFIED -1.0
+#endif
 
 namespace tgl
 {
@@ -61,16 +65,25 @@ public:
      */
     Waypoint();
 
-    /*! Initializing constructor. Creates a waypoint from a vector of waypoint coordinates. Initializes the waypoint time to 0.0.
-     *  \param newWpt a vector of waypoint coordinates
-     */
-    Waypoint(const Eigen::VectorXd& newWpt);
-
     /*! Initializing constructor. Creates a waypoint from a vector of waypoint coordinates and their associated time.
      *  \param newWpt a vector of waypoint coordinates
      *  \param newWptTime the time at which the waypoint should occur
      */
-    Waypoint(const Eigen::VectorXd& newWpt, double newWptTime);
+    Waypoint(const Eigen::VectorXd& newWpt, double newWptTime = TGL_WAYPOINT_TIME_NOT_SPECIFIED);
+
+    /*! Initializing constructor. Creates a waypoint from a Displacementd object which contains both position and orientation.
+     *  \param newWpt a Displacementd waypoint with position and orientation
+     *  \param newWptTime the time at which the waypoint should occur. *If this is not specified then the waypoint time will not be set.*
+     */
+    Waypoint(const Eigen::Displacementd& newWpt, double newWptTime = TGL_WAYPOINT_TIME_NOT_SPECIFIED);
+
+    /*! Initializing constructor. Creates a waypoint from a Rotation3d object which contains a quaternion orientation.
+     *  \param newWpt a quaternion orientation waypoint
+     *  \param newWptTime the time at which the waypoint should occur. *If this is not specified then the waypoint time will not be set.*
+     */
+    Waypoint(const Eigen::Rotation3d& newWpt, double newWptTime = TGL_WAYPOINT_TIME_NOT_SPECIFIED);
+
+    //TODO: Implement KDL versions of this.
 
     /*! Assignment operator.
      */
@@ -102,16 +115,35 @@ public:
     // Waypoint operator*=(double scalar);
     // Waypoint operator/=(double scalar);
 
-    /*! Sets the waypoint from a vector of waypoint coordinates. Initializes the waypoint time to 0.0. Note: This will erase any existing waypoint data.
+    /*! Sets the waypoint from a vector of waypoint coordinates and their associated time.
+     *  \warning This will erase any existing waypoint data.
      *  \param newWpt a vector of waypoint coordinates
+     *  \param newWptTime the time at which the waypoint should occur. *If this is not specified then the waypoint time will not be set.*
      */
-    TglMessage set(const Eigen::VectorXd& newWpt);
+    TglMessage set(const Eigen::VectorXd& newWpt, double newWptTime = TGL_WAYPOINT_TIME_NOT_SPECIFIED);
 
-    /*! Sets the waypoint from a vector of waypoint coordinates and their associated time. Note: This will erase any existing waypoint data.
-     *  \param newWpt a vector of waypoint coordinates
-     *  \param newWptTime the time at which the waypoint should occur
+    /*! Sets the waypoint from a Displacementd object which contains both position and orientation.
+     *  \warning This will erase any existing waypoint data.
+     *  \param newWpt a Displacementd waypoint with position and orientation
+     *  \param newWptTime the time at which the waypoint should occur. *If this is not specified then the waypoint time will not be set.*
      */
-    TglMessage set(const Eigen::VectorXd& newWpt, double newWptTime);
+    TglMessage set(const Eigen::Displacementd& newWpt, double newWptTime = TGL_WAYPOINT_TIME_NOT_SPECIFIED);
+
+    /*! Sets the waypoint from a Rotation3d object which contains a quaternion orientation.
+     *  \warning This will erase any existing waypoint data.
+     *  \param newWpt a quaternion orientation waypoint
+     *  \param newWptTime the time at which the waypoint should occur. *If this is not specified then the waypoint time will not be set.*
+     */
+    TglMessage set(const Eigen::Rotation3d& newWpt, double newWptTime = TGL_WAYPOINT_TIME_NOT_SPECIFIED);
+
+    /*! Sets the waypoint from a Wrenchd object which contains both torque and force.
+     *  \warning This will erase any existing waypoint data.
+     *  \param newWpt a waypoint in torque and force
+     *  \param newWptTime the time at which the waypoint should occur. *If this is not specified then the waypoint time will not be set.*
+     */
+    TglMessage set(const Eigen::Wrenchd& newWpt, double newWptTime = TGL_WAYPOINT_TIME_NOT_SPECIFIED);
+
+    //TODO: Implement KDL versions of this.
 
     /*! Sets only the waypoint time. Note: This will erase the existing waypoint time.
      *  \param newWptTime the time at which the waypoint should occur
