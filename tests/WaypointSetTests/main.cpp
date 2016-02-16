@@ -55,15 +55,15 @@ class ConstructorTest : public TglTest{
 protected:
     TglTestMessage test(){
         int nDof = 3; Eigen::VectorXd onesVec = Eigen::VectorXd::Ones(nDof);
-        StdVectorXd wpt_vector = {onesVec*1.0, onesVec*2.0, onesVec*3.0};
+        StdWaypointVector wpt_vector = {Waypoint(onesVec*1.0, 0.0), Waypoint(onesVec*2.0, 1.1), Waypoint(onesVec*3.0, 2.1)};
         StdDoubleVector wpt_times = {0.0, 1.1, 2.1};
 
         Eigen::MatrixXd testMat(nDof,3); testMat << onesVec*1.0, onesVec*2.0, onesVec*3.0;
         Eigen::MatrixXd emptyMat(0,0);
 
         WaypointSet wpt1;
-        WaypointSet wpt2(wpt_vector);
-        WaypointSet wpt3(wpt_vector, wpt_times);
+        WaypointSet wpt2 = {Waypoint(onesVec*1.0), Waypoint(onesVec*2.0), Waypoint(onesVec*3.0)};
+        WaypointSet wpt3(wpt_vector);
 
         bool matsOk = true;
         matsOk &= emptyMat == wpt1.asMatrix();
@@ -83,7 +83,7 @@ class GetterTest : public TglTest{
 protected:
     TglTestMessage test(){
         int nDof = 3; Eigen::VectorXd onesVec = Eigen::VectorXd::Ones(nDof);
-        StdVectorXd wpt_vector = {onesVec*1.0, onesVec*2.0, onesVec*3.0};
+        StdWaypointVector wpt_vector = {Waypoint(onesVec*1.0, 0.0), Waypoint(onesVec*2.0, 1.1), Waypoint(onesVec*3.0, 2.1)};
         StdDoubleVector wpt_times = {0.0, 1.1, 2.1};
         Eigen::Vector3d wpt_times_VecXd(0.0, 1.1, 2.1);
 
@@ -91,8 +91,8 @@ protected:
         Eigen::MatrixXd emptyMat(0,0);
 
         WaypointSet wpt1;
-        WaypointSet wpt2(wpt_vector);
-        WaypointSet wpt3(wpt_vector, wpt_times);
+        WaypointSet wpt2 = {Waypoint(onesVec*1.0), Waypoint(onesVec*2.0), Waypoint(onesVec*3.0)};
+        WaypointSet wpt3(wpt_vector);
 
         bool testsOk = true;
 

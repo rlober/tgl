@@ -39,22 +39,19 @@ WaypointSet::WaypointSet()
 {
 }
 
-WaypointSet::WaypointSet(const StdVectorXd& wpts)
-{
-    if(!setWaypoints(wpts)){
-        LOG(ERROR) << "Unable to properly set waypoints.";
-    }
-}
-
-WaypointSet::WaypointSet(const StdVectorXd& wpts, const StdDoubleVector& wpt_times)
-{
-    if(!setWaypoints(wpts, wpt_times)){
-        LOG(ERROR) << "Unable to properly set waypoints.";
-    }
-}
-
 WaypointSet::WaypointSet(const StdWaypointVector& wptVec)
 {
+    if(!setWaypointMap(wptVec)){
+        LOG(ERROR) << "Unable to properly set waypoints.";
+    }
+}
+
+WaypointSet::WaypointSet(std::initializer_list<Waypoint> il)
+{
+    StdWaypointVector wptVec;
+    for(auto&& i : il)
+        wptVec.push_back(i);
+
     if(!setWaypointMap(wptVec)){
         LOG(ERROR) << "Unable to properly set waypoints.";
     }
@@ -64,62 +61,53 @@ WaypointSet::~WaypointSet()
 {
 }
 
-TglMessage WaypointSet::setWaypoints(const StdVectorXd& wpts)
-{
-    StdDoubleVector wpt_times;
-    for(auto i:wpts)
-        wpt_times.push_back(0.0);
-
-    return setWaypoints(wpts, wpt_times);
-}
-
-TglMessage WaypointSet::setWaypoints(const StdVectorXd& wpts, const StdDoubleVector& wpt_times)
-{
-    if(wpt_times.size() == wpts.size())
-    {
-        int expectedVectorDimension = wpts[0].size();
-        bool sizeOk;
-        StdWaypointVector wptVec;
-        for(size_t i=0; i<wpts.size(); i++)
-        {
-            if(wpts[i].size() == expectedVectorDimension){
-                wptVec.push_back(Waypoint(wpts[i], wpt_times[i]));
-            }else{
-                LOG(WARNING) << "You are trying to mix waypoints of different sizes! Be careful.";
-                // TODO: Pad with zeros rather than replace with a zero vec.
-                wptVec.push_back(Waypoint(Eigen::VectorXd::Zero(expectedVectorDimension), wpt_times[i]));
-            }
-        }
-        return setWaypointMap(wptVec);
-    }
-    else
-    {
-        LOG(ERROR) << "Waypoint and Waypoint Times vectors are not the same size.";
-        return TGL_ERROR;
-    }
-}
+// TglMessage WaypointSet::setWaypoints(const StdVectorXd& wpts, const StdDoubleVector& wpt_times)
+// {
+//     if(wpt_times.size() == wpts.size())
+//     {
+//         int expectedVectorDimension = wpts[0].size();
+//         bool sizeOk;
+//         StdWaypointVector wptVec;
+//         for(size_t i=0; i<wpts.size(); i++)
+//         {
+//             if(wpts[i].size() == expectedVectorDimension){
+//                 wptVec.push_back(Waypoint(wpts[i], wpt_times[i]));
+//             }else{
+//                 LOG(WARNING) << "You are trying to mix waypoints of different sizes! Be careful.";
+//                 // TODO: Pad with zeros rather than replace with a zero vec.
+//                 wptVec.push_back(Waypoint(Eigen::VectorXd::Zero(expectedVectorDimension), wpt_times[i]));
+//             }
+//         }
+//         return setWaypointMap(wptVec);
+//     }
+//     else
+//     {
+//         LOG(ERROR) << "Waypoint and Waypoint Times vectors are not the same size.";
+//         return TGL_ERROR;
+//     }
+// }
 
 TglMessage WaypointSet::setWaypoints(const StdWaypointVector& wptVec)
 {
     return setWaypointMap(wptVec);
 }
 
-TglMessage WaypointSet::addWaypoint(const Eigen::VectorXd& wpt)
+TglMessage WaypointSet::insert(const Waypoint& wpt)
 {
     //TODO: implement
 }
 
-TglMessage WaypointSet::addWaypoint(const Eigen::VectorXd& wpt, const double wpt_time)
+TglMessage WaypointSet::insert(const StdWaypointVector& wptVec)
 {
     //TODO: implement
 }
 
-TglMessage WaypointSet::addWaypoints(const StdVectorXd& wpts)
+TglMessage WaypointSet::push_back(const Waypoint& wpt)
 {
     //TODO: implement
 }
 
-TglMessage WaypointSet::addWaypoints(const StdVectorXd& wpts, const StdDoubleVector& wpt_times)
+TglMessage WaypointSet::push_back(const StdWaypointVector& wptVec)
 {
     //TODO: implement
 }
@@ -188,6 +176,13 @@ bool WaypointSet::empty()
 {
     return wptMap.empty();
 }
+
+TglMessage WaypointSet::erase()
+{
+    wptMap.clear();
+    return empty() ? TGL_OK : TGL_ERROR;
+}
+
 
 /****************************************************
                    Private Functions
