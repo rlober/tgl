@@ -43,7 +43,9 @@
 #include "tgl/TglTypes.hpp"
 #include "tgl/WaypointSet.hpp"
 
-
+#ifndef TGL_USE_INTERNAL_CLOCK /*!< Tells the getDesired functions to use the internal trajectory clock. */
+#define TGL_USE_INTERNAL_CLOCK -1.0
+#endif
 
 
 
@@ -75,35 +77,68 @@ public:
      */
     virtual ~Trajectory();
 
-    /*! Get the desired values from the trajectory. This function uses an internal clock to keep track of the time evolution. **Open Loop**
-     *  \param desired a reference to an Eigen::MatrixXd which will be filled by the trajectory implementation
-     *  \return A TglMessage indicating the status of the trajectory (see TglTypes.hpp)
-     */
-    TglMessage getDesired(Eigen::MatrixXd& desired);
-
     /*! Get the desired values from the trajectory. **Open Loop**
-     *  \param time_step the time with which to calculate the desired values.
-     *  \param desired a reference to an Eigen::MatrixXd which will be filled by the trajectory implementation
+     *  \param desiredPos the position reference provided by the trajectory
+     *  \param desiredVel the velocity reference provided by the trajectory
+     *  \param desiredAcc the acceleration reference provided by the trajectory
+     *  \param time_step the time with which to calculate the desired values. If not given, will default to an interal clock.
      *  \return A TglMessage indicating the status of the trajectory (see TglTypes.hpp)
      */
-    virtual TglMessage getDesired(const double time_step, Eigen::MatrixXd& desired);
-
-    /*! Get the desired values from the trajectory. **Closed Loop**
-     *  \param current the current state of the system being controlled by the trajectory.
-     *  \param desired a reference to an Eigen::MatrixXd which will be filled by the trajectory implementation
-     *  \return A TglMessage indicating the status of the trajectory (see TglTypes.hpp)
-     */
-    virtual TglMessage getDesired(const Eigen::MatrixXd& current, Eigen::MatrixXd& desired);
+    TglMessage getDesired(  Eigen::VectorXd& desiredPos,
+                            Eigen::VectorXd& desiredVel,
+                            Eigen::VectorXd& desiredAcc,
+                            const double time_step=TGL_USE_INTERNAL_CLOCK);
 
     /*! Get the desired values from the trajectory. **Closed Loop**
      *  \param time_step the time with which to calculate the desired values.
-     *  \param current the current state of the system being controlled by the trajectory.
-     *  \param desired a reference to an Eigen::MatrixXd which will be filled by the trajectory implementation
+     *  \param desiredPos the position reference provided by the trajectory
+     *  \param desiredVel the velocity reference provided by the trajectory
+     *  \param desiredAcc the acceleration reference provided by the trajectory
+     *  \param currentPos the current position of the system
+     *  \param currentVel the current velocity of the system
+     *  \param currentAcc the current acceleration of the system
      *  \return A TglMessage indicating the status of the trajectory (see TglTypes.hpp)
      */
-    virtual TglMessage getDesired(const double time_step, const Eigen::MatrixXd& current, Eigen::MatrixXd& desired);
+     TglMessage getDesired(  Eigen::VectorXd& desiredPos,
+                             Eigen::VectorXd& desiredVel,
+                             Eigen::VectorXd& desiredAcc,
+                             const Eigen::VectorXd& currentPos,
+                             const Eigen::VectorXd& currentVel,
+                             const Eigen::VectorXd& currentAcc,
+                             const double time_step=TGL_USE_INTERNAL_CLOCK);
+
 
 protected:
+
+    /*! This function should be implemented by the specific trajectory types and represents the **Open Loop** version of the `getDesired()` function. Orientation values will not pass through this function but rather be treated separately and concatenated to the results of this function.
+     *  \param desiredPos the position reference provided by the trajectory
+     *  \param desiredVel the velocity reference provided by the trajectory
+     *  \param desiredAcc the acceleration reference provided by the trajectory
+     *  \param time_step the time with which to calculate the desired values. If not given, will default to an interal clock.
+     *  \return A TglMessage indicating the status of the trajectory (see TglTypes.hpp)
+     */
+    virtual TglMessage getImplementationDesired(Eigen::VectorXd& desiredPos,
+                                                Eigen::VectorXd& desiredVel,
+                                                Eigen::VectorXd& desiredAcc,
+                                                const double time_step);
+
+    /*! This function should be implemented by the specific trajectory types and represents the **Closed Loop** version of the `getDesired()` function. Orientation values will not pass through this function but rather be treated separately and concatenated to the results of this function.
+     *  \param time_step the time with which to calculate the desired values.
+     *  \param desiredPos the position reference provided by the trajectory
+     *  \param desiredVel the velocity reference provided by the trajectory
+     *  \param desiredAcc the acceleration reference provided by the trajectory
+     *  \param currentPos the current position of the system
+     *  \param currentVel the current velocity of the system
+     *  \param currentAcc the current acceleration of the system
+     *  \return A TglMessage indicating the status of the trajectory (see TglTypes.hpp)
+     */
+     virtual TglMessage getImplementationDesired(Eigen::VectorXd& desiredPos,
+                                                 Eigen::VectorXd& desiredVel,
+                                                 Eigen::VectorXd& desiredAcc,
+                                                 const Eigen::VectorXd& currentPos,
+                                                 const Eigen::VectorXd& currentVel,
+                                                 const Eigen::VectorXd& currentAcc,
+                                                 const double time_step);
 
     /*! Sets the trajectory waypoints.
      *  \param newWptSet the Waypoint Set to use for the trajectory.
@@ -129,6 +164,7 @@ private:
     WaypointSet wptSet;                                                         /*!< The Waypoint Set for the trajectory. */
     bool internalClockResetTrigger;                                             /*!< Used to determine whether or not to reset the internal clock. */
     std::chrono::time_point<std::chrono::system_clock> internalClockStartTime;  /*!< The time at which the internal trajectory clock was triggered. */
+
 
 };
 

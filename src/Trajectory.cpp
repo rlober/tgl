@@ -47,32 +47,69 @@ Trajectory::~Trajectory()
 {
 }
 
-TglMessage Trajectory::getDesired(Eigen::MatrixXd& desired)
+TglMessage Trajectory::getDesired(  Eigen::VectorXd& desiredPos,
+                                    Eigen::VectorXd& desiredVel,
+                                    Eigen::VectorXd& desiredAcc,
+                                    const double time_step)
 {
-    return getDesired(getInternalClockTime(), desired);
+    double tmp_time_step = time_step == TGL_USE_INTERNAL_CLOCK ? getInternalClockTime() : time_step;
+    TglMessage implementationMessage = getImplementationDesired(desiredPos, desiredVel, desiredAcc, tmp_time_step);
+    /*TODO:
+     *  Implement Quaternion SLERP and derivation for angular velocity and acceleration.
+     *  Concatenate results to desiredPos/Vel/Acc
+     */
+    if (implementationMessage == TGL_FINISHED) {
+        resetInternalClock();
+    }
+    return implementationMessage;
 }
 
-TglMessage Trajectory::getDesired(const double time_step, Eigen::MatrixXd& desired)
+TglMessage Trajectory::getDesired(  Eigen::VectorXd& desiredPos,
+                                    Eigen::VectorXd& desiredVel,
+                                    Eigen::VectorXd& desiredAcc,
+                                    const Eigen::VectorXd& currentPos,
+                                    const Eigen::VectorXd& currentVel,
+                                    const Eigen::VectorXd& currentAcc,
+                                    const double time_step)
 {
-    LOG(ERROR) << "The trajectory you are using has not implemented this function!";
+    double tmp_time_step = time_step == TGL_USE_INTERNAL_CLOCK ? getInternalClockTime() : time_step;
+    TglMessage implementationMessage = getImplementationDesired(desiredPos, desiredVel, desiredAcc, currentPos, currentVel, currentAcc, tmp_time_step);
+    /*TODO:
+     *  Implement Quaternion SLERP and derivation for angular velocity and acceleration.
+     *  Concatenate results to desiredPos/Vel/Acc
+     */
+     if (implementationMessage == TGL_FINISHED) {
+         resetInternalClock();
+     }
+     return implementationMessage;
+}
+
+
+TglMessage Trajectory::getImplementationDesired(Eigen::VectorXd& desiredPos,
+                                                Eigen::VectorXd& desiredVel,
+                                                Eigen::VectorXd& desiredAcc,
+                                                const double time_step)
+{
+    LOG(ERROR) << "The trajectory you are using has not implemented an open-loop generator!";
     return TGL_ERROR;
 }
 
-TglMessage Trajectory::getDesired(const Eigen::MatrixXd& current, Eigen::MatrixXd& desired)
+TglMessage Trajectory::getImplementationDesired(Eigen::VectorXd& desiredPos,
+                                                Eigen::VectorXd& desiredVel,
+                                                Eigen::VectorXd& desiredAcc,
+                                                const Eigen::VectorXd& currentPos,
+                                                const Eigen::VectorXd& currentVel,
+                                                const Eigen::VectorXd& currentAcc,
+                                                const double time_step)
 {
-    LOG(ERROR) << "The trajectory you are using has not implemented this function!";
-    return TGL_ERROR;
-}
-
-TglMessage Trajectory::getDesired(const double time_step, const Eigen::MatrixXd& current, Eigen::MatrixXd& desired)
-{
-    LOG(ERROR) << "The trajectory you are using has not implemented this function!";
+    LOG(ERROR) << "The trajectory you are using has not implemented a closed-loop generator!";
     return TGL_ERROR;
 }
 
 TglMessage Trajectory::setWaypoints(const WaypointSet& newWptSet)
 {
     wptSet = newWptSet;
+    resetInternalClock();
 }
 
 TglMessage Trajectory::getWaypoints(WaypointSet& newWptSet)
