@@ -58,6 +58,18 @@ TglMessage Trajectory::getDesired(const double time_step, Eigen::MatrixXd& desir
     return TGL_ERROR;
 }
 
+TglMessage Trajectory::getDesired(const Eigen::MatrixXd& current, Eigen::MatrixXd& desired)
+{
+    LOG(ERROR) << "The trajectory you are using has not implemented this function!";
+    return TGL_ERROR;
+}
+
+TglMessage Trajectory::getDesired(const double time_step, const Eigen::MatrixXd& current, Eigen::MatrixXd& desired)
+{
+    LOG(ERROR) << "The trajectory you are using has not implemented this function!";
+    return TGL_ERROR;
+}
+
 TglMessage Trajectory::setWaypoints(const WaypointSet& newWptSet)
 {
     wptSet = newWptSet;
@@ -82,7 +94,8 @@ double Trajectory::getInternalClockTime()
 {
     if (internalClockResetTrigger) {
         internalClockStartTime = std::chrono::system_clock::now();
+        internalClockResetTrigger = false;
     }
 
-    return 0.0;//std::chrono::duration<double>(std::chrono::system_clock::now() - internalClockStartTime);
+    return std::chrono::duration<double>(std::chrono::system_clock::now() - internalClockStartTime).count();
 }

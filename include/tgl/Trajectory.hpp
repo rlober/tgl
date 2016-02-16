@@ -33,6 +33,7 @@
 #include <iostream>
 #include <vector>
 #include <chrono>
+#include <sstream>
 
 // Eigen includes
 #include <Eigen/Dense>
@@ -92,7 +93,7 @@ public:
      *  \param desired a reference to an Eigen::MatrixXd which will be filled by the trajectory implementation
      *  \return A TglMessage indicating the status of the trajectory (see TglTypes.hpp)
      */
-    virtual TglMessage getDesired(const Eigen::MatrixXd& current, Eigen::MatrixXd& desired) = 0;
+    virtual TglMessage getDesired(const Eigen::MatrixXd& current, Eigen::MatrixXd& desired);
 
     /*! Get the desired values from the trajectory. **Closed Loop**
      *  \param time_step the time with which to calculate the desired values.
@@ -100,7 +101,7 @@ public:
      *  \param desired a reference to an Eigen::MatrixXd which will be filled by the trajectory implementation
      *  \return A TglMessage indicating the status of the trajectory (see TglTypes.hpp)
      */
-    virtual TglMessage getDesired(const double time_step, const Eigen::MatrixXd& current, Eigen::MatrixXd& desired) = 0;
+    virtual TglMessage getDesired(const double time_step, const Eigen::MatrixXd& current, Eigen::MatrixXd& desired);
 
 protected:
 
