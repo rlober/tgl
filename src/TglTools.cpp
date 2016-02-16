@@ -29,3 +29,8 @@
 #include "tgl/TglTools.hpp"
 
 using namespace tgl;
+
+Eigen::Displacementd TglTools::eigenVectorXdToDisplacementd(const Eigen::VectorXd& inputVector)
+{
+    return Eigen::Displacementd(0,0,0,0,0,0,0);
+}

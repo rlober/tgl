@@ -28,7 +28,13 @@
 
 #ifndef TGL_TGLTOOLS_H
 #define TGL_TGLTOOLS_H
+// STL includes
 #include <chrono>
+
+
+// Eigen includes
+#include <Eigen/Dense>
+#include <Eigen/Lgsm>
 
 /*! \brief Chronometer START trigger.
  *
@@ -69,6 +75,69 @@ static int TGL_CHRONO_COUNT = 0;                                                
 static int TGL_CHRONO_START_LINE = 0;                                           /*!< The line where the START trigger was called. */
 static std::chrono::high_resolution_clock::time_point TGL_CHRONO_START_TIME;    /*!< System time at the START trigger. */
 static std::chrono::high_resolution_clock::time_point TGL_CHRONO_STOP_TIME;     /*!< System time at the START trigger. */
+
+/*! \class TglTools
+ *  \brief A tool class which provides some useful static conversion functions.
+ *
+ *  This is mostly a "faux" class full of static functions which make life just a little easier for the users. Here you will find a bunch of conversion functions to/from Eigen, KDL, and EigenLgsm.
+ */
+class TglTools {
+public:
+    TglTools ();
+    ~TglTools ();
+
+    /*! Convert an Eigen::VectorXd to an Eigen::Displacementd (Lgsm)
+     *  \param inputVector an Vector of values which must be of dimension 7 and correspond to the following:
+        \f[
+            \begin{array}{cc}
+            pos =& \begin{dcases} \begin{bmatrix} x \\ y \\ z \end{bmatrix}\end{dcases} \\
+            quat =& \begin{dcases}\begin{bmatrix} qw \\ qx \\ qy \\ qz \end{bmatrix}\end{dcases}
+            \end{array}
+        \f]
+     *  \return An Dispd object filled with the inputVector values.
+     */
+    static Eigen::Displacementd eigenVectorXdToDisplacementd(const Eigen::VectorXd& inputVector);
+
+    /*! Convert an Eigen::VectorXd to an Eigen::Twistd (Lgsm)
+     *  \param inputVector an Vector of values which must be of dimension 6 and correspond to the following:
+        \f[
+            \begin{array}{cc}
+            linear =& \begin{dcases} \begin{bmatrix} x \\ y \\ z \end{bmatrix}\end{dcases} \\
+            angular =& \begin{dcases}\begin{bmatrix} \omega_x \\ \omega_y \\ \omega_z \end{bmatrix}\end{dcases}
+            \end{array}
+        \f]
+     *  \return An Twistd object filled with the inputVector values.
+     */
+    static Eigen::Twistd eigenVectorXdToTwistd(const Eigen::VectorXd& inputVector);
+
+    /*! Convert an Eigen::VectorXd to an Eigen::Rotation3d (Quaternion) (Lgsm)
+     *  \param inputVector an Vector of values which must be of dimension 4 and correspond to the following:
+        \f[
+            \begin{bmatrix} qw \\ qx \\ qy \\ qz \end{bmatrix}
+        \f]
+     *  \return An Dispd object filled with the inputVector values.
+     */
+    static Eigen::Rotation3d eigenVectorXdToRotation3d(const Eigen::VectorXd& inputVector);
+
+    /*! Convert an Eigen::Displacementd to an Eigen::Displacementd (Lgsm)
+     *  \param inputDisplacementd an Eigen Lgsm Displacementd object reference
+     *  \return A VectorXd object filled with the input values.
+     */
+    static Eigen::VectorXd eigenDisplacementdToVectorXd(const Eigen::Displacementd& inputDisplacementd);
+
+    /*! Convert an Eigen::Twistd to an Eigen::Twistd (Lgsm)
+     *  \param inputTwistd an Eigen Lgsm Twistd object reference
+     *  \return A VectorXd object filled with the input values.
+     */
+    static Eigen::VectorXd eigenTwistdToVectorXd(const Eigen::Twistd& inputTwistd);
+
+    /*! Convert an Eigen::Rotation3d to an Eigen::Rotation3d (Quaternion) (Lgsm)
+     *  \param inputRotation3d an Eigen Lgsm Rotation3d object reference
+     *  \return A VectorXd object filled with the input values.
+     */
+    static Eigen::VectorXd eigenRotation3dToVectorXd(const Eigen::Rotation3d& inputRotation3d);
+
+};
 
 } // End of namespace tgl
 #endif //TGL_TGLTOOLS_H
