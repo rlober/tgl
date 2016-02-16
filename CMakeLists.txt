@@ -39,6 +39,7 @@ file(GLOB header_files ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp)
 
 # Find Eigen headers
 find_package(Eigen REQUIRED)
+find_package(EigenLgsm REQUIRED)
 
 # Find glog (Google logging utility for C++)
 find_package(Glog REQUIRED)
@@ -47,6 +48,7 @@ find_package(Glog REQUIRED)
 include_directories(
 ${CMAKE_CURRENT_SOURCE_DIR}/include
 ${Eigen_INCLUDE_DIRS}
+${EigenLgsm_INCLUDE_DIRS}
 ${GLOG_INCLUDE_DIRS}
 )
 
