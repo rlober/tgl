@@ -73,6 +73,9 @@ TglMessage Trajectory::getDesired(  Eigen::VectorXd& desiredPos,
                                     const double time_step)
 {
     double tmp_time_step = time_step == TGL_USE_INTERNAL_CLOCK ? getInternalClockTime() : time_step;
+    /* TODO:
+     * Separate the rotation compenents from the linear components and pass those to the implementations.
+     */
     TglMessage implementationMessage = getImplementationDesired(desiredPos, desiredVel, desiredAcc, currentPos, currentVel, currentAcc, tmp_time_step);
     /*TODO:
      *  Implement Quaternion SLERP and derivation for angular velocity and acceleration.
