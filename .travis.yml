@@ -14,9 +14,9 @@ install:
     - CI_DIR=$PWD
     - if [ "$TRAVIS_OS_NAME" = linux -o -z "$TRAVIS_OS_NAME" ]; then sudo sh -c 'echo "deb http://www.icub.org/ubuntu trusty contrib/science" > /etc/apt/sources.list.d/icub.list' ; fi
     - if [ "$TRAVIS_OS_NAME" = linux -o -z "$TRAVIS_OS_NAME" ]; then sudo apt-get update ; fi
-    - if [ "$TRAVIS_OS_NAME" = linux -o -z "$TRAVIS_OS_NAME" ]; then sudo apt-get install -qq -y libeigen3-dev libboost-all-dev ; fi
+    - if [ "$TRAVIS_OS_NAME" = linux -o -z "$TRAVIS_OS_NAME" ]; then sudo apt-get install -qq -y libeigen3-dev libgoogle-glog-dev doxygen ; fi
     - if [ "$TRAVIS_OS_NAME" = osx -o -z "$TRAVIS_OS_NAME" ]; then brew update ; fi
-    - if [ "$TRAVIS_OS_NAME" = osx -o -z "$TRAVIS_OS_NAME" ]; then brew install eigen tinyxml ; fi
+    - if [ "$TRAVIS_OS_NAME" = osx -o -z "$TRAVIS_OS_NAME" ]; then brew install eigen tinyxml glog doxygen ; fi
     - git clone https://github.com/ocra-recipes/eigen_lgsm.git
     - cd eigen_lgsm ; mkdir build ; cd build ; cmake ..
     - sudo make install
@@ -26,5 +26,6 @@ install:
     - cmake .. -DCMAKE_INSTALL_PREFIX=~/install -DCOMPILE_TESTS=ON -DGENERATE_DOCUMENTATION=ON
 script:
     - make -j2
+    - make doc
     # - make install
     #run tests
