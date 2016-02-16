@@ -15,7 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-add_subdirectory(TglToolsTests)
-add_subdirectory(WaypointTests)
-add_subdirectory(WaypointSetTests)
-add_subdirectory(TrajectoryTests)
+cmake_minimum_required(VERSION 2.8)
+set(bin_name "TGL_TrajectoryTests")
+
+project(${bin_name})
+
+add_executable(${bin_name} main.cpp)
+target_link_libraries(${bin_name} tgl)
