@@ -50,6 +50,13 @@ Waypoint::Waypoint(const Eigen::Rotation3d& newWpt, double newWptTime)
     set(newWpt, newWptTime);
 }
 
+
+// TODO: Bug here.
+// Waypoint::Waypoint(const Eigen::Wrenchd& newWpt, double newWptTime)
+// {
+//     set(newWpt, newWptTime);
+// }
+
 Waypoint& Waypoint::operator=(Waypoint other)
 {
     other.set(this->get(), this->getTime());

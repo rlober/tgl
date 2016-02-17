@@ -4,9 +4,8 @@
  *  \author     Ryan Lober
  *  \version
  *  \date       Feb 2016
- *  \bug
- *  \warning
  *  \copyright  GNU General Public License.
+ *  \bug        Wrench waypoint consrtuctor `Waypoint(const Eigen::Wrenchd& newWpt, double newWptTime = TGL_WAYPOINT_TIME_NOT_SPECIFIED);` has an ambiguity conflict with the `Eigen::VectorXd` constructor. Need to resolve this.
  */
 /*
  *  This file is part of TGL (Trajectory Generation Library).
@@ -82,6 +81,14 @@ public:
      *  \param newWptTime the time at which the waypoint should occur. *If this is not specified then the waypoint time will not be set.*
      */
     Waypoint(const Eigen::Rotation3d& newWpt, double newWptTime = TGL_WAYPOINT_TIME_NOT_SPECIFIED);
+
+    //TODO: Fix this BUG.
+
+    // /* Initializing constructor. Creates a waypoint from a Wrenchd object which contains both torque and force.
+    //  *  \param newWpt a waypoint in torque and force
+    //  *  \param newWptTime the time at which the waypoint should occur. *If this is not specified then the waypoint time will not be set.*
+    //  */
+    // Waypoint(const Eigen::Wrenchd& newWpt, double newWptTime = TGL_WAYPOINT_TIME_NOT_SPECIFIED);
 
     //TODO: Implement KDL versions of this.
 
