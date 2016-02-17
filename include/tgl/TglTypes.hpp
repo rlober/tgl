@@ -29,6 +29,8 @@
 #ifndef TGL_TGLTYPES_H
 #define TGL_TGLTYPES_H
 
+#include <ostream>
+
 namespace tgl
 {
 
@@ -44,6 +46,40 @@ enum TglMessage {
     TGL_RUNNING,        // 4
     TGL_FINISHED        // 5
 };
+
+enum TglWaypointType {
+    TGL_WPT_NONE,           // 0 can use this for conditional statement
+    TGL_WPT_VECTOR_XD,      // 1
+    TGL_WPT_LGSM_DISP,      // 2
+    TGL_WPT_LGSM_QUAT,      // 3
+    TGL_WPT_LGSM_WRENCH,    // 4
+    TGL_WPT_KDL_FRAME       // 5
+};
+
+inline std::ostream& operator<<(std::ostream& os, const TglWaypointType& wptType)
+{
+    switch (wptType) {
+        case TGL_WPT_NONE:
+            os << "TGL_WPT_NONE";
+            break;
+        case TGL_WPT_VECTOR_XD:
+            os << "TGL_WPT_VECTOR_XD";
+            break;
+        case TGL_WPT_LGSM_DISP:
+            os << "TGL_WPT_LGSM_DISP";
+            break;
+        case TGL_WPT_LGSM_QUAT:
+            os << "TGL_WPT_LGSM_QUAT";
+            break;
+        case TGL_WPT_LGSM_WRENCH:
+            os << "TGL_WPT_LGSM_WRENCH";
+            break;
+        case TGL_WPT_KDL_FRAME:
+            os << "TGL_WPT_KDL_FRAME";
+            break;
+    }
+    return os;
+}
 
 } // End of namespace tgl
 #endif //TGL_TGLTYPES_H
