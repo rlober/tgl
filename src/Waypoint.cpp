@@ -172,6 +172,7 @@ TglMessage Waypoint::set(const Eigen::Rotation3d& newWpt, double newWptTime)
     if(this->type()==TGL_WPT_NONE){this->setType(TGL_WPT_LGSM_QUAT);}
 
     if (this->type()==TGL_WPT_LGSM_QUAT) {
+        setTime(newWptTime);
         return this->setInternalRotation(newWpt);
     }
     else {
@@ -196,10 +197,11 @@ TglMessage Waypoint::set(const Eigen::Wrenchd& newWpt, double newWptTime)
 
 TglMessage Waypoint::setTime(double newWptTime)
 {
-    if (newWptTime!=TGL_WAYPOINT_TIME_NOT_SPECIFIED && newWptTime >= 0.0) {
+    if (newWptTime >= 0.0) {
         wptTime = newWptTime;
         return TGL_OK;
     }else{
+        wptTime = 0.0;
         return TGL_ERROR;
     }
 }

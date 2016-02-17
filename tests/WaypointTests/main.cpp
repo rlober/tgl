@@ -54,17 +54,51 @@ protected:
 class ConstructorTest : public TglTest{
 protected:
     TglTestMessage test(){
-        Eigen::VectorXd ones(3); ones << 1, 1, 1;
-        Waypoint wpt1;
-        Waypoint wpt2(ones);
-        Waypoint wpt3(ones, 0.0);
+        double vec_time = 0.0;
+        double disp_time = 0.1;
+        double rot_time = 0.2;
 
-        if  (   wpt1.get() == Eigen::VectorXd::Zero(0) &&
-                wpt2.get() == ones &&
-                wpt3.get() == ones &&
-                wpt3.getTime() == 0.0
-            ){return TGL_TEST_SUCCESS;}
-        else{return TGL_TEST_FAILURE;}
+        Eigen::VectorXd ones(3); ones << 1, 1, 1;
+        Eigen::Displacementd disp(2.0, 2.0, 2.0, 1.0, 0.0, 0.0, 0.0);
+        Eigen::Rotation3d rot(1.0, 0.0, 0.0, 0.0);
+
+        Waypoint empty_wpt;
+        Waypoint vec_wpt(ones, vec_time);
+        Waypoint disp_wpt(disp, disp_time);
+        Waypoint rot_wpt(rot, rot_time);
+
+        bool checks = true;
+        checks &= empty_wpt.get() == Eigen::VectorXd::Zero(0);
+        if(!checks){std::cout << "Failed @ " << __LINE__ - 1 << std::endl;}
+        checks &= vec_wpt.getTime() == vec_time;
+        if(!checks){std::cout << "Failed @ " << __LINE__ - 1 << std::endl;}
+
+        checks &= vec_wpt.get() == ones;
+        if(!checks){std::cout << "Failed @ " << __LINE__ - 1 << std::endl;}
+        checks &= vec_wpt.getTime() == vec_time;
+        if(!checks){std::cout << "Failed @ " << __LINE__ - 1 << std::endl;}
+
+        checks &= disp_wpt.get() == ones*2.0;
+        if(!checks){std::cout << "Failed @ " << __LINE__ - 1 << std::endl;}
+        checks &= disp_wpt.getRotation().w() == Eigen::Rotation3d::Identity().w();
+        checks &= disp_wpt.getRotation().x() == Eigen::Rotation3d::Identity().x();
+        checks &= disp_wpt.getRotation().y() == Eigen::Rotation3d::Identity().y();
+        checks &= disp_wpt.getRotation().z() == Eigen::Rotation3d::Identity().z();
+        if(!checks){std::cout << "Failed @ " << __LINE__ - 1 << std::endl;}
+        checks &= disp_wpt.getTime() == disp_time;
+        if(!checks){std::cout << "Failed @ " << __LINE__ - 1 << std::endl;}
+
+        checks &= rot_wpt.get() == Eigen::VectorXd::Zero(0);
+        if(!checks){std::cout << "Failed @ " << __LINE__ - 1 << std::endl;}
+        checks &= rot_wpt.getRotation().w() == Eigen::Rotation3d::Identity().w();
+        checks &= rot_wpt.getRotation().x() == Eigen::Rotation3d::Identity().x();
+        checks &= rot_wpt.getRotation().y() == Eigen::Rotation3d::Identity().y();
+        checks &= rot_wpt.getRotation().z() == Eigen::Rotation3d::Identity().z();
+        if(!checks){std::cout << "Failed @ " << __LINE__ - 1 << std::endl;}
+        checks &= rot_wpt.getTime() == rot_time;
+        if(!checks){std::cout << "Failed @ " << __LINE__ - 1 << std::endl;}
+
+        return checks ? TGL_TEST_SUCCESS : TGL_TEST_FAILURE;
     }
 };
 
