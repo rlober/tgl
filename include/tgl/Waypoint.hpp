@@ -178,6 +178,12 @@ public:
      */
     Eigen::VectorXd get(bool includeTimes = false);
 
+    /*! Get the waypoint quaternion if one exists.
+     *  \return The waypoint quaternion.
+     *  \warning If the waypoint type does not implicitly contain a rotation then an Identity quaternion will be returned.
+     */
+    Eigen::Rotation3d getRotation();
+
     /*! Get the waypoint time.
      *  \return The waypoint time.
      */
@@ -188,10 +194,39 @@ public:
      */
     int getDimension();
 
+    /*! Get the type of object used to construct the waypoint.
+     *  \return The type of waypoint used as a TglWaypointType
+     */
+     TglWaypointType type();
+
+     /*! Get the type of object used to construct the waypoint.
+      *  \return The type of waypoint used as a TglWaypointType
+      */
+     bool hasRotation();
+
 
 private:
-    Eigen::VectorXd wpt;    /*!< The waypoint coordinate vector. */
-    double wptTime;         /*!< The waypoint time. */
+
+    /*! Sets the waypoint vector exposed to the trajectory implementations.
+     *  \param newWpt a vector of waypoint coordinates
+     *  \param newWptTime the time at which the waypoint should occur.
+     */
+    TglMessage setInternalVariables(const Eigen::VectorXd& newWpt, double newWptTime);
+
+    /*! Sets the waypoint quaternion handled internally here.
+     *  \param newQuat the waypoint's quaternion
+     */
+    TglMessage setInternalRotation(const Eigen::Rotation3d& newQuat);
+
+    /*! Sets the waypoint type.
+     *  \param newType the waypoint type
+     */
+    TglMessage setType(TglWaypointType newType);
+
+    Eigen::VectorXd wpt;            /*!< The waypoint coordinate vector. */
+    Eigen::Rotation3d wptRotation;  /*!< The rotation components of a waypoint. */
+    double wptTime;                 /*!< The waypoint time. */
+    TglWaypointType wptType;        /*!< The type of representation used to construct the waypoint. */
 };
 
 } // end of namespace tgl

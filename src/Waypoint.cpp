@@ -31,23 +31,31 @@
 
 using namespace tgl;
 
-Waypoint::Waypoint()
+/****************************************************
+                   Public Functions
+ ****************************************************/
+
+Waypoint::Waypoint():
+wptType(TGL_WPT_NONE)
 {
 }
 
-Waypoint::Waypoint(const Eigen::VectorXd& newWpt, double newWptTime)
+Waypoint::Waypoint(const Eigen::VectorXd& newWpt, double newWptTime):
+wptType(TGL_WPT_VECTOR_XD)
 {
-    set(newWpt, newWptTime);
+    this->set(newWpt, newWptTime);
 }
 
-Waypoint::Waypoint(const Eigen::Displacementd& newWpt, double newWptTime)
+Waypoint::Waypoint(const Eigen::Displacementd& newWpt, double newWptTime):
+wptType(TGL_WPT_LGSM_DISP)
 {
-    set(newWpt, newWptTime);
+    this->set(newWpt, newWptTime);
 }
 
-Waypoint::Waypoint(const Eigen::Rotation3d& newWpt, double newWptTime)
+Waypoint::Waypoint(const Eigen::Rotation3d& newWpt, double newWptTime):
+wptType(TGL_WPT_LGSM_QUAT)
 {
-    set(newWpt, newWptTime);
+    this->set(newWpt, newWptTime);
 }
 
 
@@ -132,61 +140,151 @@ Waypoint Waypoint::operator/(double scalar)
 
 TglMessage Waypoint::set(const Eigen::VectorXd& newWpt, double newWptTime)
 {
-    if (newWptTime!=TGL_WAYPOINT_TIME_NOT_SPECIFIED && newWptTime >= 0.0) {
-        setTime(newWptTime);
-    }
+    if(this->type()==TGL_WPT_NONE){this->setType(TGL_WPT_VECTOR_XD);}
 
-    if (!getDimension()) {
-        wpt = newWpt;
-    }else if (getDimension()==newWpt.size()) {
-        wpt = newWpt;
-    }else{
-        LOG(ERROR) << "The new waypoint dimension ("<< newWpt.size() <<") does not match the current waypoint dimension ("<<getDimension()<<"). Doing nothing.";
+    if (this->type()==TGL_WPT_VECTOR_XD) {
+        return this->setInternalVariables(newWpt, newWptTime);
+    }
+    else {
+        LOG(ERROR) << "You can not set a waypoint of type: " << this->type() << " with an Eigen::VectorXd.";
         return TGL_ERROR;
     }
-    return TGL_OK;
 }
 
 TglMessage Waypoint::set(const Eigen::Displacementd& newWpt, double newWptTime)
 {
-    //TODO: implement
-    return TGL_OK;
+    if(this->type()==TGL_WPT_NONE){this->setType(TGL_WPT_LGSM_DISP);}
+
+    if (this->type()==TGL_WPT_LGSM_DISP) {
+        Eigen::VectorXd newVectorXdWpt = newWpt.getTranslation();
+        if (this->setInternalRotation(newWpt.getRotation())) {
+            return this->setInternalVariables(newVectorXdWpt, newWptTime);
+        }
+    }
+    else {
+        LOG(ERROR) << "You can not set a waypoint of type: " << this->type() << " with an Eigen::VectorXd.";
+        return TGL_ERROR;
+    }
 }
 
 TglMessage Waypoint::set(const Eigen::Rotation3d& newWpt, double newWptTime)
 {
-    //TODO: implement
-    return TGL_OK;
+    if(this->type()==TGL_WPT_NONE){this->setType(TGL_WPT_LGSM_QUAT);}
+
+    if (this->type()==TGL_WPT_LGSM_QUAT) {
+        return this->setInternalRotation(newWpt);
+    }
+    else {
+        LOG(ERROR) << "You can not set a waypoint of type: " << this->type() << " with an Eigen::VectorXd.";
+        return TGL_ERROR;
+    }
 }
 
 TglMessage Waypoint::set(const Eigen::Wrenchd& newWpt, double newWptTime)
 {
-    //TODO: implement
-    return TGL_OK;
+    if(this->type()==TGL_WPT_NONE){this->setType(TGL_WPT_LGSM_WRENCH);}
+
+    if (this->type()==TGL_WPT_LGSM_WRENCH) {
+        Eigen::VectorXd newVectorXdWpt = newWpt;
+        return this->setInternalVariables(newVectorXdWpt, newWptTime);
+    }
+    else {
+        LOG(ERROR) << "You can not set a waypoint of type: " << this->type() << " with an Eigen::VectorXd.";
+        return TGL_ERROR;
+    }
 }
 
 TglMessage Waypoint::setTime(double newWptTime)
 {
-    wptTime = newWptTime;
-    return TGL_OK;
+    if (newWptTime!=TGL_WAYPOINT_TIME_NOT_SPECIFIED && newWptTime >= 0.0) {
+        wptTime = newWptTime;
+        return TGL_OK;
+    }else{
+        return TGL_ERROR;
+    }
 }
 
 Eigen::VectorXd Waypoint::get(bool includeTimes)
 {
     if (includeTimes) {
-        Eigen::VectorXd v(getDimension() + 1); v << getTime(), wpt;
+        Eigen::VectorXd v(this->getDimension() + 1); v << this->getTime(), wpt;
         return v;
     }
     else {
         return wpt;
     }
 }
+
 double Waypoint::getTime()
 {
     return wptTime;
 }
 
+Eigen::Rotation3d Waypoint::getRotation()
+{
+    if (this->hasRotation()) {
+        return wptRotation;
+    }
+    else {
+        LOG(ERROR) << "Waypoints of type: " << this->type() << " do not have a quaternion component.";
+        return Eigen::Rotation3d::Identity();
+    }
+}
+
 int Waypoint::getDimension()
 {
     return wpt.size();
+}
+
+TglWaypointType Waypoint::type()
+{
+    return wptType;
+}
+
+bool Waypoint::hasRotation()
+{
+    if (this->type() == TGL_WPT_LGSM_DISP ||
+        this->type() == TGL_WPT_LGSM_QUAT) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+
+/****************************************************
+                   Private Functions
+ ****************************************************/
+
+TglMessage Waypoint::setInternalVariables(const Eigen::VectorXd& newWpt, double newWptTime)
+{
+    setTime(newWptTime);
+    if (!this->getDimension()) {
+        wpt = newWpt;
+    }else if (this->getDimension()==newWpt.size()) {
+        wpt = newWpt;
+    }else{
+        LOG(ERROR) << "The new waypoint dimension ("<< newWpt.size() <<") does not match the current waypoint dimension ("<<this->getDimension()<<"). Doing nothing.";
+        return TGL_ERROR;
+    }
+    return TGL_OK;
+}
+
+TglMessage Waypoint::setInternalRotation(const Eigen::Rotation3d& newQuat)
+{
+    wptRotation = newQuat;
+    return TGL_OK;
+}
+
+TglMessage Waypoint::setType(TglWaypointType newType)
+{
+    if (this->type()!=TGL_WPT_NONE) {
+        LOG(ERROR) << "You can't change the type of waypoint (currently: "<< this->type() <<") once it has been set.";
+        return TGL_ERROR;
+    }
+    else {
+        wptType = newType;
+        return TGL_OK;
+    }
 }
