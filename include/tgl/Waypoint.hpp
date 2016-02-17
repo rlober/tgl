@@ -9,7 +9,7 @@
  */
 /*
  *  This file is part of TGL (Trajectory Generation Library).
- *  Copyright (C) 2016 Institut des Systemes Intelligents et de Robotique (ISIR)
+ *  Copyright (C) 2016 Institut des Systèmes Intelligents et de Robotique (ISIR)
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by

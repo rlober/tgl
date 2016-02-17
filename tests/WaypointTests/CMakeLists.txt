@@ -1,5 +1,5 @@
 # This file is part of TGL (Trajectory Generation Library).
-# Copyright (C) 2016 Institut des Systemes Intelligents et de Robotique (ISIR)
+# Copyright (C) 2016 Institut des Systèmes Intelligents et de Robotique (ISIR)
 # author(s): Ryan Lober
 #
 # This program is free software: you can redistribute it and/or modify

@@ -10,7 +10,7 @@
  */
 /*
  *  This file is part of TGL (Trajectory Generation Library).
- *  Copyright (C) 2016 Institut des Systemes Intelligents et de Robotique (ISIR)
+ *  Copyright (C) 2016 Institut des Systèmes Intelligents et de Robotique (ISIR)
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -60,32 +60,6 @@ WaypointSet::WaypointSet(std::initializer_list<Waypoint> il)
 WaypointSet::~WaypointSet()
 {
 }
-
-// TglMessage WaypointSet::setWaypoints(const StdVectorXd& wpts, const StdDoubleVector& wpt_times)
-// {
-//     if(wpt_times.size() == wpts.size())
-//     {
-//         int expectedVectorDimension = wpts[0].size();
-//         bool sizeOk;
-//         StdWaypointVector wptVec;
-//         for(size_t i=0; i<wpts.size(); i++)
-//         {
-//             if(wpts[i].size() == expectedVectorDimension){
-//                 wptVec.push_back(Waypoint(wpts[i], wpt_times[i]));
-//             }else{
-//                 LOG(WARNING) << "You are trying to mix waypoints of different sizes! Be careful.";
-//                 // TODO: Pad with zeros rather than replace with a zero vec.
-//                 wptVec.push_back(Waypoint(Eigen::VectorXd::Zero(expectedVectorDimension), wpt_times[i]));
-//             }
-//         }
-//         return setWaypointMap(wptVec);
-//     }
-//     else
-//     {
-//         LOG(ERROR) << "Waypoint and Waypoint Times vectors are not the same size.";
-//         return TGL_ERROR;
-//     }
-// }
 
 TglMessage WaypointSet::setWaypoints(const StdWaypointVector& wptVec)
 {
