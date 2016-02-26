@@ -26,6 +26,6 @@ install:
     - cmake .. -DCMAKE_INSTALL_PREFIX=~/install -DCOMPILE_TESTS=ON -DGENERATE_DOCUMENTATION=ON
 script:
     - make -j2
-    - make doc
+    - make docs
     # - make install
     #run tests
